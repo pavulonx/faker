@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Faker.iml" filepath="$PROJECT_DIR$/.idea/modules/Faker.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/fakerApp-build.iml" filepath="$PROJECT_DIR$/.idea/modules/fakerApp-build.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/model.iml" filepath="$PROJECT_DIR$/.idea/modules/model.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/model-build.iml" filepath="$PROJECT_DIR$/.idea/modules/model-build.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/web.iml" filepath="$PROJECT_DIR$/.idea/modules/web.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/web-build.iml" filepath="$PROJECT_DIR$/.idea/modules/web-build.iml" />
+    </modules>
+  </component>
+</project>
