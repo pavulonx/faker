@@ -11,6 +11,7 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="module" module-name="fakerApp-build" />
     <orderEntry type="module-library">
       <library name="sbt: sbt-and-plugins">
         <CLASSES>
@@ -99,7 +100,6 @@
         <SOURCES />
       </library>
     </orderEntry>
-    <orderEntry type="module" module-name="fakerApp-build" />
   </component>
   <component name="SbtModule">
     <option name="buildForId" value="model" />
