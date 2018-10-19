@@ -2,10 +2,10 @@ val Http4sVersion = "0.18.18"
 val Specs2Version = "4.2.0"
 val LogbackVersion = "1.2.3"
 
-lazy val web = (project in file("."))
+lazy val api = (project in file("."))
   .settings(
     organization := "cf.jrozen",
-    name := "web",
+    name := "api",
     version := "0.0.1-SNAPSHOT",
     scalaVersion := "2.12.6",
     libraryDependencies ++= Seq(

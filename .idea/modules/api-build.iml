@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<module external.linked.project.id="web-build [file:/home/rozen/Workspace/faker/]" external.linked.project.path="$MODULE_DIR$/../../web/project" external.root.project.path="$MODULE_DIR$/../.." external.system.id="SBT" sbt.imports="SUB:DOLLAR170a20523178e940a0a1.`model`, SUB:DOLLAR6fb85c475a3e8e2b7852.`web`, SUB:DOLLAR989541d1ec3fdab28ee8.`fakerApp`, SUB:DOLLAR989541d1ec3fdab28ee8.`model`, SUB:DOLLAR989541d1ec3fdab28ee8.`web`, _root_.sbt.Keys._, _root_.sbt._, _root_.sbt.plugins.IvyPlugin, _root_.sbt.plugins.JvmPlugin, _root_.sbt.plugins.CorePlugin, _root_.sbt.plugins.JUnitXmlReportPlugin, _root_.sbt.plugins.Giter8TemplatePlugin, _root_.scala.xml.{TopScope=&gt;SUB:DOLLARscope}" sbt.resolvers="https://repo1.maven.org/maven2/|maven|public, file:/home/rozen/.sbt/preloaded/|maven|local-preloaded, /home/rozen/.ivy2/cache|ivy|Local cache" type="SBT_MODULE" version="4">
+<module external.linked.project.id="api-build [file:/home/rozen/Workspace/faker/]" external.linked.project.path="$MODULE_DIR$/../../api/project" external.root.project.path="$MODULE_DIR$/../.." external.system.id="SBT" sbt.imports="SUB:DOLLAR1e9217cb46b97edb6d8f.`kafka`, SUB:DOLLAR5263ef8658ecf74122f1.`frontendSUB:DOLLARminusprodSUB:DOLLARminusbuild`, SUB:DOLLAR5263ef8658ecf74122f1.`frontendSUB:DOLLARminusrun`, SUB:DOLLAR5263ef8658ecf74122f1.`frontendSUB:DOLLARminustest`, SUB:DOLLARb4f792a20d608a99c658.`api`, SUB:DOLLARb4f792a20d608a99c658.`fakerApp`, SUB:DOLLARb4f792a20d608a99c658.`kafka`, SUB:DOLLARb4f792a20d608a99c658.`model`, SUB:DOLLARb4f792a20d608a99c658.`prod`, SUB:DOLLARd7799286abbd6deae635.`model`, SUB:DOLLARf7d1ff534be0f64a5e4f.`api`, _root_.sbt.Keys._, _root_.sbt._, _root_.sbt.plugins.IvyPlugin, _root_.sbt.plugins.JvmPlugin, _root_.sbt.plugins.CorePlugin, _root_.sbt.plugins.JUnitXmlReportPlugin, _root_.sbt.plugins.Giter8TemplatePlugin, _root_.scala.xml.{TopScope=&gt;SUB:DOLLARscope}" sbt.resolvers="https://repo1.maven.org/maven2/|maven|public, file:/home/rozen/.sbt/preloaded/|maven|local-preloaded, /home/rozen/.ivy2/cache|ivy|Local cache" type="SBT_MODULE" version="4">
   <component name="NewModuleRootManager">
-    <output url="file://$MODULE_DIR$/../../web/project/target/idea-classes" />
-    <output-test url="file://$MODULE_DIR$/../../web/project/target/idea-test-classes" />
+    <output url="file://$MODULE_DIR$/../../api/project/target/idea-classes" />
+    <output-test url="file://$MODULE_DIR$/../../api/project/target/idea-test-classes" />
     <exclude-output />
-    <content url="file://$MODULE_DIR$/../../web/project">
-      <sourceFolder url="file://$MODULE_DIR$/../../web/project" isTestSource="false" />
-      <excludeFolder url="file://$MODULE_DIR$/../../web/project/project/target" />
-      <excludeFolder url="file://$MODULE_DIR$/../../web/project/target" />
+    <content url="file://$MODULE_DIR$/../../api/project">
+      <sourceFolder url="file://$MODULE_DIR$/../../api/project" isTestSource="false" />
+      <excludeFolder url="file://$MODULE_DIR$/../../api/project/project/target" />
+      <excludeFolder url="file://$MODULE_DIR$/../../api/project/target" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="module" module-name="fakerApp-build" />
     <orderEntry type="module-library">
       <library name="sbt: sbt-and-plugins">
         <CLASSES>
@@ -99,11 +100,10 @@
         <SOURCES />
       </library>
     </orderEntry>
-    <orderEntry type="module" module-name="fakerApp-build" />
   </component>
   <component name="SbtModule">
-    <option name="buildForId" value="web" />
+    <option name="buildForId" value="api" />
     <option name="buildForURI" value="file:$MODULE_DIR$/../../" />
-    <option name="imports" value="SUB:DOLLAR170a20523178e940a0a1.`model`, SUB:DOLLAR6fb85c475a3e8e2b7852.`web`, SUB:DOLLAR989541d1ec3fdab28ee8.`fakerApp`, SUB:DOLLAR989541d1ec3fdab28ee8.`model`, SUB:DOLLAR989541d1ec3fdab28ee8.`web`, _root_.sbt.Keys._, _root_.sbt._, _root_.sbt.plugins.IvyPlugin, _root_.sbt.plugins.JvmPlugin, _root_.sbt.plugins.CorePlugin, _root_.sbt.plugins.JUnitXmlReportPlugin, _root_.sbt.plugins.Giter8TemplatePlugin, _root_.scala.xml.{TopScope=&gt;SUB:DOLLARscope}" />
+    <option name="imports" value="SUB:DOLLAR1e9217cb46b97edb6d8f.`kafka`, SUB:DOLLAR5263ef8658ecf74122f1.`frontendSUB:DOLLARminusprodSUB:DOLLARminusbuild`, SUB:DOLLAR5263ef8658ecf74122f1.`frontendSUB:DOLLARminusrun`, SUB:DOLLAR5263ef8658ecf74122f1.`frontendSUB:DOLLARminustest`, SUB:DOLLARb4f792a20d608a99c658.`api`, SUB:DOLLARb4f792a20d608a99c658.`fakerApp`, SUB:DOLLARb4f792a20d608a99c658.`kafka`, SUB:DOLLARb4f792a20d608a99c658.`model`, SUB:DOLLARb4f792a20d608a99c658.`prod`, SUB:DOLLARd7799286abbd6deae635.`model`, SUB:DOLLARf7d1ff534be0f64a5e4f.`api`, _root_.sbt.Keys._, _root_.sbt._, _root_.sbt.plugins.IvyPlugin, _root_.sbt.plugins.JvmPlugin, _root_.sbt.plugins.CorePlugin, _root_.sbt.plugins.JUnitXmlReportPlugin, _root_.sbt.plugins.Giter8TemplatePlugin, _root_.scala.xml.{TopScope=&gt;SUB:DOLLARscope}" />
   </component>
 </module>

@@ -8,11 +8,13 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/api" />
+            <option value="$PROJECT_DIR$/api/project" />
+            <option value="$PROJECT_DIR$/kafka" />
+            <option value="$PROJECT_DIR$/kafka/project" />
             <option value="$PROJECT_DIR$/model" />
             <option value="$PROJECT_DIR$/model/project" />
             <option value="$PROJECT_DIR$/project" />
-            <option value="$PROJECT_DIR$/web" />
-            <option value="$PROJECT_DIR$/web/project" />
           </set>
         </option>
         <option name="sbtVersion" value="1.1.2" />
