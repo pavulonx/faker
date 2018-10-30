@@ -21,10 +21,16 @@ lazy val model = (project in file("model"))
 lazy val kafka = (project in file("kafka"))
   .settings(moduleName := "kafka", name := "kafka")
   .settings(
-    resolvers += "Ovotech" at "https://dl.bintray.com/ovotech/maven",
-    libraryDependencies ++= Seq(
-      "com.ovoenergy" %% "fs2-kafka-client" % "0.1.13"
-    )
+    resolvers += Resolver.bintrayRepo("ovotech", "maven"),
+    libraryDependencies ++= {
+      val kafkaSerializationV = "0.3.16"
+      Seq(
+        "com.ovoenergy" %% "fs2-kafka-client" % "0.1.21",
+        "com.ovoenergy" %% "kafka-serialization-core" % kafkaSerializationV,
+        "com.ovoenergy" %% "kafka-serialization-core" % kafkaSerializationV,
+        "com.ovoenergy" %% "kafka-serialization-circe" % kafkaSerializationV
+      )
+    }
   )
 
 lazy val api = (project in file("api"))

@@ -1,6 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ScalaCompilerConfiguration">
+    <parameters>
+      <parameter value="&quot;-encoding&quot;," />
+      <parameter value="&quot;UTF-8&quot;," />
+      <parameter value="&quot;-feature&quot;," />
+      <parameter value="&quot;-language:existentials&quot;," />
+      <parameter value="&quot;-language:higherKinds&quot;," />
+      <parameter value="&quot;-language:implicitConversions&quot;," />
+      <parameter value="&quot;-language:experimental.macros&quot;," />
+      <parameter value="&quot;-language:postfixOps&quot;," />
+      <parameter value="&quot;-unchecked&quot;," />
+      <parameter value="&quot;-Ywarn-dead-code&quot;," />
+      <parameter value="&quot;-Ywarn-numeric-widen&quot;," />
+      <parameter value="&quot;-Ywarn-value-discard&quot;," />
+      <parameter value="&quot;-Xfuture&quot;" />
+    </parameters>
     <profile name="sbt 1" modules="faker_6738,Faker kafka" />
     <profile name="sbt 3" modules="Api app,app">
       <option name="postfixOps" value="true" />
@@ -23,11 +38,16 @@
       </parameters>
     </profile>
     <profile name="sbt 4" modules="model,kafka">
-      <parameters>
-        <parameter value="-Ypartial-unification" />
-      </parameters>
+      <option name="postfixOps" value="true" />
+      <option name="implicitConversions" value="true" />
+      <option name="higherKinds" value="true" />
+      <option name="existentials" value="true" />
+      <option name="deprecationWarnings" value="true" />
+      <option name="uncheckedWarnings" value="true" />
+      <option name="featureWarnings" value="true" />
+      <option name="explainTypeErrors" value="true" />
     </profile>
-    <profile name="sbt 6" modules="Faker,notifier,api,faker">
+    <profile name="sbt 6" modules="Faker,faker,notifier,api">
       <option name="postfixOps" value="true" />
       <option name="implicitConversions" value="true" />
       <option name="higherKinds" value="true" />
@@ -36,17 +56,6 @@
       <option name="deprecationWarnings" value="true" />
       <option name="uncheckedWarnings" value="true" />
       <option name="featureWarnings" value="true" />
-      <parameters>
-        <parameter value="-Ypartial-unification" />
-        <parameter value="-encoding" />
-        <parameter value="UTF-8" />
-        <parameter value="-Ywarn-dead-code" />
-        <parameter value="-Ywarn-numeric-widen" />
-        <parameter value="-Ywarn-value-discard" />
-        <parameter value="-Xfuture" />
-        <parameter value="-Yno-adapted-args" />
-        <parameter value="-Xfatal-warnings" />
-      </parameters>
     </profile>
   </component>
 </project>
