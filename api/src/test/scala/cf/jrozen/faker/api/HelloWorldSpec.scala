@@ -1,4 +1,4 @@
-package cf.jrozen.faker.web
+package cf.jrozen.faker.api
 
 import cats.effect.IO
 import org.http4s._

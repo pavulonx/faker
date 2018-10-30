@@ -1,17 +1,52 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ScalaCompilerConfiguration">
-    <profile name="sbt 1" modules="faker_6738,Faker,kafka,model" />
-    <profile name="sbt 2" modules="api">
+    <profile name="sbt 1" modules="faker_6738,Faker kafka" />
+    <profile name="sbt 3" modules="Api app,app">
       <option name="postfixOps" value="true" />
       <option name="implicitConversions" value="true" />
       <option name="higherKinds" value="true" />
       <option name="existentials" value="true" />
+      <option name="macros" value="true" />
+      <option name="deprecationWarnings" value="true" />
+      <option name="uncheckedWarnings" value="true" />
       <option name="featureWarnings" value="true" />
-      <plugins>
-        <plugin path="$USER_HOME$/.ivy2/cache/org.spire-math/kind-projector_2.12/jars/kind-projector_2.12-0.9.6.jar" />
-        <plugin path="$USER_HOME$/.ivy2/cache/com.olegpy/better-monadic-for_2.12/jars/better-monadic-for_2.12-0.2.4.jar" />
-      </plugins>
+      <parameters>
+        <parameter value="-encoding" />
+        <parameter value="UTF-8" />
+        <parameter value="-Ywarn-dead-code" />
+        <parameter value="-Ywarn-numeric-widen" />
+        <parameter value="-Ywarn-value-discard" />
+        <parameter value="-Xfuture" />
+        <parameter value="-Yno-adapted-args" />
+        <parameter value="-Xfatal-warnings" />
+      </parameters>
+    </profile>
+    <profile name="sbt 4" modules="model,kafka">
+      <parameters>
+        <parameter value="-Ypartial-unification" />
+      </parameters>
+    </profile>
+    <profile name="sbt 6" modules="Faker,notifier,api,faker">
+      <option name="postfixOps" value="true" />
+      <option name="implicitConversions" value="true" />
+      <option name="higherKinds" value="true" />
+      <option name="existentials" value="true" />
+      <option name="macros" value="true" />
+      <option name="deprecationWarnings" value="true" />
+      <option name="uncheckedWarnings" value="true" />
+      <option name="featureWarnings" value="true" />
+      <parameters>
+        <parameter value="-Ypartial-unification" />
+        <parameter value="-encoding" />
+        <parameter value="UTF-8" />
+        <parameter value="-Ywarn-dead-code" />
+        <parameter value="-Ywarn-numeric-widen" />
+        <parameter value="-Ywarn-value-discard" />
+        <parameter value="-Xfuture" />
+        <parameter value="-Yno-adapted-args" />
+        <parameter value="-Xfatal-warnings" />
+      </parameters>
     </profile>
   </component>
 </project>

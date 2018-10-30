@@ -2,15 +2,17 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Faker.iml" filepath="$PROJECT_DIR$/.idea/modules/Faker.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/api.iml" filepath="$PROJECT_DIR$/.idea/modules/api.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/api-build.iml" filepath="$PROJECT_DIR$/.idea/modules/api-build.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/faker.iml" filepath="$PROJECT_DIR$/.idea/modules/faker.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/fakerApp-build.iml" filepath="$PROJECT_DIR$/.idea/modules/fakerApp-build.iml" />
       <module fileurl="file://$PROJECT_DIR$/frontend/frontend.iml" filepath="$PROJECT_DIR$/frontend/frontend.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/kafka.iml" filepath="$PROJECT_DIR$/.idea/modules/kafka.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/kafka-build.iml" filepath="$PROJECT_DIR$/.idea/modules/kafka-build.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/model.iml" filepath="$PROJECT_DIR$/.idea/modules/model.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/model-build.iml" filepath="$PROJECT_DIR$/.idea/modules/model-build.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/notifier.iml" filepath="$PROJECT_DIR$/.idea/modules/notifier.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/notifier-build.iml" filepath="$PROJECT_DIR$/.idea/modules/notifier-build.iml" />
     </modules>
   </component>
 </project>

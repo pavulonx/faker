@@ -1,4 +1,4 @@
-package cf.jrozen.faker.web
+package cf.jrozen.faker.api
 
 import cats.effect.{Effect, IO}
 import fs2.StreamApp
@@ -31,7 +31,7 @@ object ServerStream {
     _ <- printAbcIo
   } yield ()
 
-  printAbcIo
+  printAbcIo.unsafeRunSync()
 
   printAbcIo.unsafeRunSync()
 

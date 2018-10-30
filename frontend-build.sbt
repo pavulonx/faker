@@ -65,9 +65,9 @@ lazy val `frontend-prod-build` = taskKey[Unit]("Run UI build when packaging the 
   implicit val userInterfaceRoot = baseDirectory.value / "frontend"
   if (executeProdBuild != Success) throw new Exception("Oops! UI Build crashed.")
 }
-
-// Execute frontend prod build task prior to play dist execution.
-compile := ((compile in Compile) dependsOn `frontend-prod-build`).value
-
-// Execute frontend test task prior to play test execution.
-test := ((test in Test) dependsOn `frontend-test`).value
+//
+//// Execute frontend prod build task prior to play dist execution.
+//compile := ((compile in Compile) dependsOn `frontend-prod-build`).value
+//
+//// Execute frontend test task prior to play test execution.
+//test := ((test in Test) dependsOn `frontend-test`).value
