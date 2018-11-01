@@ -6,8 +6,8 @@ import {Observable} from "rxjs/Observable";
 export class WebsocketService {
 
   private _wsSubject: WebSocketSubject<any>;
-  private wsUrl = 'ws://localhost:8080/updates/';
-  private clientId = 'dupacyckiws';
+  private wsUrl = 'ws://localhost:8080/notifications/';
+  private clientId = 'CHUJ';
 
   constructor() {
   }

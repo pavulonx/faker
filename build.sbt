@@ -1,9 +1,15 @@
 scalaVersion in ThisBuild := "2.12.6"
 organization in ThisBuild := "cf.jrozen"
 
-val Http4sVersion = "0.18.20" //todo: upgrade to 0.20.x series
+//val Http4sVersion = "0.18.20" //todo: upgrade to 0.20.x series
+val Http4sVersion = "0.20.0-M1" //todo: upgrade to 0.20.x series
 val Specs2Version = "4.2.0"
 val LogbackVersion = "1.2.3"
+val CirceVersion = "0.10.1"
+val KafkaSerializationV = "0.3.16"
+val fs2KafkaVersion = "0.16.0"
+val fs2V = "1.0.0"
+
 
 val Success = 0
 val Error = 1
@@ -14,23 +20,32 @@ lazy val commonSettings = Seq(
   scalacOptions ++= commonScalacOptions(scalaVersion.value)
 )
 
+lazy val circeDependencies = Seq(
+  "io.circe" %% "circe-core" % CirceVersion,
+  "io.circe" %% "circe-generic" % CirceVersion,
+  "io.circe" %% "circe-parser" % CirceVersion
+)
+
 lazy val model = (project in file("model"))
   .settings(moduleName := "model", name := "model")
+  .settings(commonSettings)
+  .settings(
+    libraryDependencies ++= circeDependencies
+  )
 
 
 lazy val kafka = (project in file("kafka"))
   .settings(moduleName := "kafka", name := "kafka")
+  .settings(commonSettings)
   .settings(
     resolvers += Resolver.bintrayRepo("ovotech", "maven"),
-    libraryDependencies ++= {
-      val kafkaSerializationV = "0.3.16"
-      Seq(
-        "com.ovoenergy" %% "fs2-kafka-client" % "0.1.21",
-        "com.ovoenergy" %% "kafka-serialization-core" % kafkaSerializationV,
-        "com.ovoenergy" %% "kafka-serialization-core" % kafkaSerializationV,
-        "com.ovoenergy" %% "kafka-serialization-circe" % kafkaSerializationV
-      )
-    }
+    libraryDependencies ++= Seq(
+      "com.ovoenergy" %% "fs2-kafka" % fs2KafkaVersion,
+      "com.ovoenergy" %% "kafka-serialization-core" % KafkaSerializationV,
+      "com.ovoenergy" %% "kafka-serialization-core" % KafkaSerializationV,
+      "com.ovoenergy" %% "kafka-serialization-circe" % KafkaSerializationV,
+      "org.specs2" %% "specs2-core" % Specs2Version % "test",
+    ) ++ circeDependencies
   )
 
 lazy val api = (project in file("api"))
@@ -54,10 +69,12 @@ lazy val notifier = (project in file("notifier"))
       "org.http4s" %% "http4s-blaze-server" % Http4sVersion,
       "org.http4s" %% "http4s-circe" % Http4sVersion,
       "org.http4s" %% "http4s-dsl" % Http4sVersion,
+      "co.fs2" %% "fs2-core" % fs2V,
       "org.specs2" %% "specs2-core" % Specs2Version % "test",
       "ch.qos.logback" % "logback-classic" % LogbackVersion
-    )
+    ) ++ circeDependencies
   )
+  .dependsOn(model, kafka)
 
 lazy val fakerApp = (project in file("."))
   .settings(name := "faker", moduleName := "root")

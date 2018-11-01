@@ -1,11 +1,9 @@
 package cf.jrozen.faker.kafka
 
-import cats.effect.Effect
-import com.ovoenergy.fs2.kafka.{ConsumerSettings, _}
 import com.ovoenergy.kafka.serialization.circe._
+import fs2.kafka._
 import io.circe.{Decoder, Encoder}
-import org.apache.kafka.clients.consumer.{ConsumerConfig, ConsumerRecord}
-import org.apache.kafka.common.serialization.{Deserializer, Serializer, StringDeserializer}
+import org.apache.kafka.common.serialization.{Deserializer, Serializer, StringDeserializer, StringSerializer}
 
 import scala.concurrent.ExecutionContext
 import scala.language.postfixOps
@@ -14,28 +12,41 @@ object KafkaConfiguration {
 
   import scala.concurrent.duration._
 
-  def configuration(groupId: String, kafkaServerInfo: KafkaServerInfo): ConsumerSettings = ConsumerSettings(
-    pollTimeout = 10 seconds,
-    maxParallelism = 4,
-    nativeSettings = Map(
-      ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG -> "true",
-      ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG -> kafkaServerInfo.url,
-      ConsumerConfig.GROUP_ID_CONFIG -> groupId,
-      ConsumerConfig.AUTO_OFFSET_RESET_CONFIG -> "earliest"
-    )
-  )
-
-  def consumeTopic[T: Decoder, F[_]: Effect](topic: String, settings: ConsumerSettings)
-                                         (implicit ec: ExecutionContext): fs2.Stream[F, ConsumerRecord[String, T]] =
-    consume[F](
-      TopicSubscription(Set(topic)),
-      new StringDeserializer,
-      jsonDeserializer[T],
-      settings
-    )
+  def consumerSettings[V: Decoder](groupId: String, kafkaServerInfo: KafkaServerInfo = KafkaServerInfo.localDefault)
+  : ExecutionContext => ConsumerSettings[String, V] =
+    (ec: ExecutionContext) =>
+      ConsumerSettings[String, V](new StringDeserializer, jsonDeserializer[V], ec)
+        .withAutoOffsetReset(AutoOffsetReset.Earliest)
+        .withBootstrapServers(kafkaServerInfo.url)
+        .withPollTimeout(250 milliseconds)
+        .withGroupId(groupId)
+        .withEnableAutoCommit(true)
 
 
-  def jsonSerializer[T: Encoder]: Serializer[T] = circeJsonSerializer[T]
+  def producerSettings[V: Encoder](kafkaServerInfo: KafkaServerInfo = KafkaServerInfo.localDefault): ProducerSettings[String, V] =
+    ProducerSettings(keySerializer = new StringSerializer, valueSerializer = jsonSerializer[V])
+      .withBootstrapServers(kafkaServerInfo.url)
 
-  def jsonDeserializer[T: Decoder]: Deserializer[T] = circeJsonDeserializer[T]
+  //  def consumeTopic[F[_] : Effect, T: Decoder](topic: String, settings: ConsumerSettings)
+  //                                             (implicit ec: ExecutionContext): fs2.Stream[F, ConsumerRecord[String, T]] =
+  //    consume[F](
+  //      TopicSubscription(Set(topic)),
+  //      new StringDeserializer,
+  //      jsonDeserializer[T],
+  //      settings
+  //    )
+  //
+  //  def consumeTopic[F[_] : Effect, T: Decoder](topic: String, settings: ConsumerSettings)
+  //                                             (implicit ec: ExecutionContext): fs2.Stream[F, ConsumerRecord[String, T]] =
+  //    produce[F](
+  //      TopicSubscription(Set(topic)),
+  //      new StringDeserializer,
+  //      jsonDeserializer[T],
+  //      settings
+  //    )
+
+
+  private def jsonSerializer[T: Encoder]: Serializer[T] = circeJsonSerializer[T]
+
+  private def jsonDeserializer[T: Decoder]: Deserializer[T] = circeJsonDeserializer[T]
 }
