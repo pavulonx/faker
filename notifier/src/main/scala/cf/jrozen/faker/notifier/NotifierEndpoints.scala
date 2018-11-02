@@ -1,7 +1,7 @@
 package cf.jrozen.faker.notifier
 
 import cats.data.Kleisli
-import cats.effect.{ConcurrentEffect, Effect, Timer}
+import cats.effect.{ConcurrentEffect, Effect, Sync, Timer}
 import cats.implicits._
 import fs2.concurrent.Queue
 import fs2.{Pipe, Sink, Stream}
@@ -53,9 +53,7 @@ class NotifierEndpoints[F[_] : Effect](implicit F: ConcurrentEffect[F], timer: T
   def serviceEndpoint(notifierService: NotifierService[F]): HttpRoutes[F] = HttpRoutes.of[F] {
 
     case GET -> Root / "notifications" / clientId =>
-      val toClient: Stream[F, WebSocketFrame] =
-        notifierService.subscribe(clientId)
-      //        Stream.awakeEvery[F](1.seconds).map(d => Text(s"Ping! $d"))
+      val toClient: Stream[F, WebSocketFrame] = notifierService.subscribe(clientId)
       val fromClient: Sink[F, WebSocketFrame] = _.evalMap { // todo: commit msg - now autocommit
         case Text(t: String, _) => F.delay(println(s"Client msg: " + t))
         case Close(_) => F.delay(println(s"Client $clientId connection close"))
@@ -80,7 +78,7 @@ object NotifierEndpoints {
   }
 
   def app[F[_] : Effect](notifierService: NotifierService[F])
-                        (implicit F: ConcurrentEffect[F], timer: Timer[F]): HttpApp[F] = {
+                        (implicit S: Sync[F], F: ConcurrentEffect[F], timer: Timer[F]): HttpApp[F] = {
     Kleisli(a => endpoints(notifierService).run(a).getOrElse(Response.notFound))
   }
 }
