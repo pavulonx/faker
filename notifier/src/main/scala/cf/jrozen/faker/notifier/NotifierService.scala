@@ -9,8 +9,6 @@ import io.circe.Json
 import org.http4s.websocket.WebSocketFrame
 import org.http4s.websocket.WebSocketFrame.Text
 
-import scala.concurrent.ExecutionContext
-
 class NotifierService[F[_] : ConcurrentEffect : ContextShift : Timer](val kafkaServerInfo: KafkaServerInfo) {
 
   def subscribe(clientId: String): Stream[F, WebSocketFrame] = {
@@ -28,8 +26,7 @@ class NotifierService[F[_] : ConcurrentEffect : ContextShift : Timer](val kafkaS
 
 object NotifierService {
 
-  def apply[F[_]](kafkaServerInfo: KafkaServerInfo)(
-    implicit F: ConcurrentEffect[F], cs: ContextShift[F], ec: ExecutionContext, timer: Timer[F]
-  ): NotifierService[F] = new NotifierService[F](kafkaServerInfo)
+  def apply[F[_] : ConcurrentEffect : ContextShift : Timer](kafkaServerInfo: KafkaServerInfo): NotifierService[F] =
+    new NotifierService[F](kafkaServerInfo)
 
 }

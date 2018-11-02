@@ -66,6 +66,7 @@ lazy val mongo = (project in file("mongo"))
   .settings(commonSettings)
   .settings(
     libraryDependencies ++= Seq(
+      "org.lyranthe" %% "fs2-mongodb" % "0.5.0",
       "org.specs2" %% "specs2-core" % Specs2Version % "test",
       "ch.qos.logback" % "logback-classic" % LogbackVersion
     ) ++ circeDependencies
