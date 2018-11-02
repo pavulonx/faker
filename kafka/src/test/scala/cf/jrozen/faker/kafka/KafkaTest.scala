@@ -43,7 +43,7 @@ object KafkaTest extends IOApp {
 //    val producerSettings = KafkaConfiguration.producerSettings[TestMsg]()
 //
 //    val topics =
-//      NonEmptyList.one("topic")
+//      NonEmptyList.one("topicNIO1HeadStage")
 //
 //    def processRecord(record: ConsumerRecord[String, TestMsg]): IO[(String, TestMsg)] =
 //      IO.pure(record.key -> record.value)

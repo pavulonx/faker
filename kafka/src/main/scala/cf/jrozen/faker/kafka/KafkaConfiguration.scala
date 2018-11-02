@@ -7,6 +7,7 @@ import org.apache.kafka.common.serialization.{Deserializer, Serializer, StringDe
 
 import scala.concurrent.ExecutionContext
 import scala.language.postfixOps
+import scala.util.Try
 
 object KafkaConfiguration {
 

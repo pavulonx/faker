@@ -5,6 +5,7 @@ import fs2._
 import org.http4s.server.blaze.BlazeServerBuilder
 
 import scala.concurrent.ExecutionContext
+import scala.concurrent.duration._
 
 
 object WsServer {
@@ -15,6 +16,7 @@ object WsServer {
       .bindHttp(port = 8080)
       .withWebSockets(true)
       .withHttpApp(NotifierEndpoints.app[F](notifierService))
+      .withIdleTimeout(5 minutes) //todo: send ping responses by ws to avoid idle state
       .serve
 
 }

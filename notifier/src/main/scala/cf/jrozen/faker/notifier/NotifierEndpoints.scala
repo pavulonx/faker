@@ -15,10 +15,12 @@ import scala.concurrent.duration._
 
 class NotifierEndpoints[F[_] : Effect](implicit F: ConcurrentEffect[F], timer: Timer[F]) extends Http4sDsl[F] {
 
+  private def pingStream(interval: FiniteDuration = 10 seconds): Stream[F, Text] =
+    Stream.awakeEvery[F](interval).map(d => Text(s"Ping! $d"))
 
   def serviceInfo(): HttpRoutes[F] = HttpRoutes.of[F] {
-    case GET -> Root / "hello" =>
-      Ok("Hello world.")
+    case GET -> Root / "info" =>
+      Ok("faker-notifier")
 
     case GET -> Root / "version" =>
       Ok("0.0.1")
@@ -26,21 +28,22 @@ class NotifierEndpoints[F[_] : Effect](implicit F: ConcurrentEffect[F], timer: T
 
   def wsDiagnostics(): HttpRoutes[F] = HttpRoutes.of[F] {
     case GET -> Root / "ping" =>
-      val toClient: Stream[F, WebSocketFrame] =
-        Stream.awakeEvery[F](1.seconds).map(d => Text(s"Ping! $d"))
+
+      val toClient: Stream[F, WebSocketFrame] = pingStream(1 second)
       val fromClient: Sink[F, WebSocketFrame] = _.evalMap {
         case Text(t, _) => F.delay(println(t))
         case f => F.delay(println(s"Unknown type: $f"))
       }
       WebSocketBuilder[F].build(toClient, fromClient)
 
+
     case GET -> Root / "wsecho" =>
+
       val echoReply: Pipe[F, WebSocketFrame, WebSocketFrame] =
         _.collect {
-          case Text(msg, _) => Text("You sent the server: " + msg)
-          case _ => Text("Something new")
+          case Text(msg, _) => Text("Echo: " + msg)
+          case _ => Text("new")
         }
-
       Queue
         .unbounded[F, WebSocketFrame]
         .flatMap { q =>
@@ -51,9 +54,8 @@ class NotifierEndpoints[F[_] : Effect](implicit F: ConcurrentEffect[F], timer: T
   }
 
   def serviceEndpoint(notifierService: NotifierService[F]): HttpRoutes[F] = HttpRoutes.of[F] {
-
     case GET -> Root / "notifications" / clientId =>
-      val toClient: Stream[F, WebSocketFrame] = notifierService.subscribe(clientId)
+      val toClient: Stream[F, WebSocketFrame] = notifierService.subscribe(clientId) merge pingStream()
       val fromClient: Sink[F, WebSocketFrame] = _.evalMap { // todo: commit msg - now autocommit
         case Text(t: String, _) => F.delay(println(s"Client msg: " + t))
         case Close(_) => F.delay(println(s"Client $clientId connection close"))
@@ -62,7 +64,6 @@ class NotifierEndpoints[F[_] : Effect](implicit F: ConcurrentEffect[F], timer: T
       WebSocketBuilder[F].build(toClient, fromClient)
 
   }
-
 
   def endpoints(notifierService: NotifierService[F]): HttpRoutes[F] = {
     serviceInfo <+> wsDiagnostics <+> serviceEndpoint(notifierService)
