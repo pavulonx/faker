@@ -61,6 +61,16 @@ lazy val api = (project in file("api"))
     )
   )
 
+lazy val mongo = (project in file("mongo"))
+  .settings(moduleName := "mongo", name := "mongo")
+  .settings(commonSettings)
+  .settings(
+    libraryDependencies ++= Seq(
+      "org.specs2" %% "specs2-core" % Specs2Version % "test",
+      "ch.qos.logback" % "logback-classic" % LogbackVersion
+    ) ++ circeDependencies
+  ).dependsOn(model)
+
 lazy val notifier = (project in file("notifier"))
   .settings(moduleName := "notifier", name := "notifier")
   .settings(commonSettings)
