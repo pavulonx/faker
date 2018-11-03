@@ -1,12 +1,11 @@
 import {BrowserModule} from '@angular/platform-browser';
 import {NgModule} from '@angular/core';
-import {HttpClientModule} from "@angular/common/http";
 
-
+import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
+import {WorkspaceComponent} from "./workspace/workspace.component";
 import {WebsocketService} from "./websocket.service";
-import { WorkspaceComponent } from './workspace/workspace.component';
-
+import {HttpClientModule} from "@angular/common/http";
 
 @NgModule({
   declarations: [
@@ -14,7 +13,8 @@ import { WorkspaceComponent } from './workspace/workspace.component';
     WorkspaceComponent
   ],
   imports: [
-    BrowserModule
+    BrowserModule,
+    AppRoutingModule
   ],
   providers: [
     WebsocketService,

@@ -2,6 +2,6 @@ package cf.jrozen.faker.mongo.repository
 
 import cats.effect.Effect
 
-class CallRepository[F[_] : Effect] {
+class RequestRepository[F[_] : Effect] {
 
 }
