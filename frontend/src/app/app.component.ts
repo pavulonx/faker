@@ -7,7 +7,6 @@ import {WebsocketService} from "./websocket.service";
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'app';
 
   constructor(private ws: WebsocketService){
     ws.getUpdates$.subscribe(e => console.log(e))
