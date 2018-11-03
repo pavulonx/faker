@@ -9,6 +9,7 @@ val CirceVersion = "0.10.1"
 val KafkaSerializationV = "0.3.16"
 val fs2KafkaVersion = "0.16.0"
 val fs2V = "1.0.0"
+val PureConfigVersion = "0.9.2"
 
 
 val Success = 0
@@ -20,19 +21,28 @@ lazy val commonSettings = Seq(
   scalacOptions ++= commonScalacOptions(scalaVersion.value)
 )
 
+lazy val testDependencies = Seq(
+  "org.specs2" %% "specs2-core" % Specs2Version % "test"
+)
 lazy val circeDependencies = Seq(
   "io.circe" %% "circe-core" % CirceVersion,
   "io.circe" %% "circe-generic" % CirceVersion,
   "io.circe" %% "circe-parser" % CirceVersion
 )
 
+lazy val http4sDependencies = Seq(
+  "org.http4s" %% "http4s-blaze-server" % Http4sVersion,
+  "org.http4s" %% "http4s-circe" % Http4sVersion,
+  "org.http4s" %% "http4s-dsl" % Http4sVersion,
+)
+
 lazy val model = (project in file("model"))
   .settings(moduleName := "model", name := "model")
   .settings(commonSettings)
   .settings(
-    libraryDependencies ++= circeDependencies
+    libraryDependencies ++= Seq(
+    ) ++ circeDependencies
   )
-
 
 lazy val kafka = (project in file("kafka"))
   .settings(moduleName := "kafka", name := "kafka")
@@ -44,7 +54,6 @@ lazy val kafka = (project in file("kafka"))
       "com.ovoenergy" %% "kafka-serialization-core" % KafkaSerializationV,
       "com.ovoenergy" %% "kafka-serialization-core" % KafkaSerializationV,
       "com.ovoenergy" %% "kafka-serialization-circe" % KafkaSerializationV,
-      "org.specs2" %% "specs2-core" % Specs2Version % "test",
     ) ++ circeDependencies
   )
 
@@ -53,13 +62,21 @@ lazy val api = (project in file("api"))
   .settings(commonSettings)
   .settings(
     libraryDependencies ++= Seq(
-      "org.http4s" %% "http4s-blaze-server" % Http4sVersion,
-      "org.http4s" %% "http4s-circe" % Http4sVersion,
-      "org.http4s" %% "http4s-dsl" % Http4sVersion,
-      "org.specs2" %% "specs2-core" % Specs2Version % "test",
       "ch.qos.logback" % "logback-classic" % LogbackVersion
-    )
+    ) ++ http4sDependencies
+      ++ testDependencies
   )
+
+lazy val handler = (project in file("handler"))
+  .settings(moduleName := "handler", name := "handler")
+  .settings(commonSettings)
+  .settings(
+    libraryDependencies ++= Seq(
+      "com.github.pureconfig" %% "pureconfig" % PureConfigVersion,
+      "ch.qos.logback" % "logback-classic" % LogbackVersion
+    ) ++ http4sDependencies
+      ++ testDependencies
+  ).dependsOn(model, kafka, mongo)
 
 lazy val mongo = (project in file("mongo"))
   .settings(moduleName := "mongo", name := "mongo")
@@ -67,7 +84,6 @@ lazy val mongo = (project in file("mongo"))
   .settings(
     libraryDependencies ++= Seq(
       "org.lyranthe" %% "fs2-mongodb" % "0.5.0",
-      "org.specs2" %% "specs2-core" % Specs2Version % "test",
       "ch.qos.logback" % "logback-classic" % LogbackVersion
     ) ++ circeDependencies
   ).dependsOn(model)
@@ -77,15 +93,12 @@ lazy val notifier = (project in file("notifier"))
   .settings(commonSettings)
   .settings(
     libraryDependencies ++= Seq(
-      "org.http4s" %% "http4s-blaze-server" % Http4sVersion,
-      "org.http4s" %% "http4s-circe" % Http4sVersion,
-      "org.http4s" %% "http4s-dsl" % Http4sVersion,
       "co.fs2" %% "fs2-core" % fs2V,
-      "org.specs2" %% "specs2-core" % Specs2Version % "test",
       "ch.qos.logback" % "logback-classic" % LogbackVersion
-    ) ++ circeDependencies
-  )
-  .dependsOn(model, kafka)
+    ) ++ http4sDependencies
+      ++ circeDependencies
+      ++ testDependencies
+  ).dependsOn(model, kafka)
 
 lazy val fakerApp = (project in file("."))
   .settings(name := "faker", moduleName := "root")
@@ -97,7 +110,9 @@ lazy val aggregatedProjects: Seq[ProjectReference] = Seq(
   model,
   kafka,
   api,
-  notifier
+  notifier,
+  mongo,
+  handler
 )
 
 lazy val http4sCompilerPlugins = Seq(

@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ScalaCompilerConfiguration">
     <profile name="sbt 1" modules="faker_3625" />
-    <profile name="sbt 2" modules="mongo,kafka,faker,model,api,notifier">
+    <profile name="sbt 2" modules="api,faker,mongo,handler,model,notifier,kafka">
       <option name="postfixOps" value="true" />
       <option name="implicitConversions" value="true" />
       <option name="higherKinds" value="true" />
@@ -21,6 +21,11 @@
         <parameter value="-Xfuture" />
         <parameter value="-Yno-adapted-args" />
         <parameter value="-Xfatal-warnings" />
+      </parameters>
+    </profile>
+    <profile name="sbt 3" modules="frontend">
+      <parameters>
+        <parameter value="-Ypartial-unification" />
       </parameters>
     </profile>
   </component>
