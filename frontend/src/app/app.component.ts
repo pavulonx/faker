@@ -1,5 +1,4 @@
-import { Component } from '@angular/core';
-import {WebsocketService} from "./websocket.service";
+import {Component} from '@angular/core';
 
 @Component({
   selector: 'app-root',
@@ -8,7 +7,4 @@ import {WebsocketService} from "./websocket.service";
 })
 export class AppComponent {
 
-  constructor(private ws: WebsocketService){
-    ws.getUpdates$.subscribe(e => console.log(e))
-  }
 }

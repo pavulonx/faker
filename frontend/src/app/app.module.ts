@@ -5,11 +5,13 @@ import {HttpClientModule} from "@angular/common/http";
 
 import {AppComponent} from './app.component';
 import {WebsocketService} from "./websocket.service";
+import { WorkspaceComponent } from './workspace/workspace.component';
 
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    WorkspaceComponent
   ],
   imports: [
     BrowserModule
