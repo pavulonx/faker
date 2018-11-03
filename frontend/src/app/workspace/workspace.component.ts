@@ -9,7 +9,7 @@ import {WebsocketService} from "../websocket.service";
 export class WorkspaceComponent implements OnInit {
 
   constructor(private ws: WebsocketService) {
-    ws.getUpdates$.subscribe(e => console.log(e))
+    // ws.getUpdates$.subscribe(e => console.log(e))
   }
 
   ngOnInit() {
