@@ -6,8 +6,6 @@
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/api-build.iml" filepath="$PROJECT_DIR$/.idea/modules/api-build.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/faker.iml" filepath="$PROJECT_DIR$/.idea/modules/faker.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/fakerApp-build.iml" filepath="$PROJECT_DIR$/.idea/modules/fakerApp-build.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/frontend.iml" filepath="$PROJECT_DIR$/.idea/modules/frontend.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/frontend-build.iml" filepath="$PROJECT_DIR$/.idea/modules/frontend-build.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/handler.iml" filepath="$PROJECT_DIR$/.idea/modules/handler.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/handler-build.iml" filepath="$PROJECT_DIR$/.idea/modules/handler-build.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/kafka.iml" filepath="$PROJECT_DIR$/.idea/modules/kafka.iml" />
