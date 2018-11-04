@@ -1,19 +1,21 @@
 scalaVersion in ThisBuild := "2.12.6"
 organization in ThisBuild := "cf.jrozen"
 
-//val Http4sVersion = "0.18.20" //todo: upgrade to 0.20.x series
-val Http4sVersion = "0.20.0-M1" //todo: upgrade to 0.20.x series
+enablePlugins(GitVersioning)
+
+val Http4sVersion = "0.20.0-M1" //todo: upgrade to stable 0.20.x series
 val Specs2Version = "4.2.0"
 val LogbackVersion = "1.2.3"
 val CirceVersion = "0.10.1"
 val KafkaSerializationV = "0.3.16"
-val fs2KafkaVersion = "0.16.0"
+val fs2KafkaVersion = "0.16.1"  /// watch for new versions
 val fs2V = "1.0.0"
 val PureConfigVersion = "0.9.2"
 
 
 val Success = 0
 val Error = 1
+
 
 shellPrompt := { s => Project.extract(s).currentProject.id + " > " }
 

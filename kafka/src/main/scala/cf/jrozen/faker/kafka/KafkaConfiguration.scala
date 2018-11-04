@@ -13,7 +13,7 @@ object KafkaConfiguration {
 
   import scala.concurrent.duration._
 
-  def consumerSettings[V: Decoder](groupId: String, kafkaServerInfo: KafkaServerInfo = KafkaServerInfo.localDefault)
+  def consumerSettings[V: Decoder](groupId: String, kafkaServerInfo: KafkaServerInfo)
   : ExecutionContext => ConsumerSettings[String, V] =
     (ec: ExecutionContext) =>
       ConsumerSettings[String, V](new StringDeserializer, jsonDeserializer[V], ec)
@@ -24,7 +24,7 @@ object KafkaConfiguration {
         .withEnableAutoCommit(true)
 
 
-  def producerSettings[V: Encoder](kafkaServerInfo: KafkaServerInfo = KafkaServerInfo.localDefault): ProducerSettings[String, V] =
+  def producerSettings[V: Encoder](kafkaServerInfo: KafkaServerInfo): ProducerSettings[String, V] =
     ProducerSettings(keySerializer = new StringSerializer, valueSerializer = jsonSerializer[V])
       .withBootstrapServers(kafkaServerInfo.url)
 

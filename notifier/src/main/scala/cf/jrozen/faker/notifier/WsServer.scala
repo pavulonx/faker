@@ -16,7 +16,7 @@ object WsServer {
       .bindHttp(port = 8080)
       .withWebSockets(true)
       .withHttpApp(NotifierEndpoints.app[F](notifierService))
-      .withIdleTimeout(5 minutes) //todo: send ping responses by ws to avoid idle state
+      .withIdleTimeout(5 minutes) //todo: send ping responses by ws to avoid idle state issue
       .serve
 
 }
