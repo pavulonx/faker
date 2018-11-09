@@ -3,7 +3,7 @@
     <div class="col-2 col-md-3 px-2">
       <div class="ws-header row mx-1">
         <h4 class="p-0 col-9 font-weight-bold text-uppercase">Endpoints</h4>
-        <button type="button" class="col-3 btn btn-primary">Add</button>
+        <button type="button" class="col-3 btn btn-primary" (click)="openEndpointModal()">Add</button>
       </div>
       <form class="form-inline">
         <input class="form-control w-100" type="text" placeholder="Search">
@@ -54,8 +54,4 @@
 
   </div>
 </div>
-
-
-
-<button class="btn btn-lg btn-outline-primary" (click)="open(content)">Launch demo modal</button>
 

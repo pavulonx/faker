@@ -9,12 +9,14 @@ import {WorkspaceComponent} from "./workspace/workspace.component";
 import {WebsocketService} from "./websocket.service";
 import {HttpClientModule} from "@angular/common/http";
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
+import {EndpointModalComponent} from './workspace/endpoint-modal/endpoint-modal.component';
 
 
 @NgModule({
   declarations: [
     AppComponent,
-    WorkspaceComponent
+    WorkspaceComponent,
+    EndpointModalComponent
   ],
   imports: [
     BrowserModule,
@@ -28,7 +30,12 @@ import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
     WebsocketService,
     HttpClientModule,
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [
+    AppComponent
+  ],
+  entryComponents: [
+    EndpointModalComponent
+  ]
 })
 export class AppModule {
 }

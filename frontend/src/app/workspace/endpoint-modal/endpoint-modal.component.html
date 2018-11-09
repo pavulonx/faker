@@ -1,0 +1,56 @@
+<div class="modal-header">
+  <h4 class="modal-title">Add new endpoint</h4>
+  <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="modal.dismiss('Cross click')">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+
+<form [formGroup]="myForm" (ngSubmit)="submitForm()">
+  <div class="modal-boy">
+    <div class="container">
+      <div class="form-group">
+        <label for="ep_name">Name:</label>
+        <input id="ep_name" type="text" autofocus
+               class="form-control"
+               formControlName="ep_name"/>
+      </div>
+      <div class="form-group">
+        <label for="ep_desc">Description*:</label>
+        <input id="ep_desc" type="text"
+               class="form-control"
+               formControlName="ep_desc"/>
+      </div>
+      <div class="form-group">
+        <label for="ep_res_code">Response code:</label>
+        <input id="ep_res_code" type="text" value="200"
+               class="form-control"
+               formControlName="ep_res_code"/>
+      </div>
+      <div class="form-group">
+        <label for="ep_res_content">Content type:</label>
+        <input id="ep_res_content" type="text" value="text/html"
+               class="form-control"
+               formControlName="ep_res_content"/>
+      </div>
+      <div class="form-group">
+        <label for="ep_res_body">Response body:</label>
+        <input id="ep_res_body" type="text"
+               class="form-control"
+               formControlName="ep_res_body"/>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-outline-warning" (click)="modal.dismiss('Close clicked')">
+      Cancel
+    </button>
+    <button class="btn btn-outline-success" (click)="modal.close('Close added')" [disabled]="!myForm.valid">
+      Add new
+    </button>
+  </div>
+</form>
+
+
+<div class="modal-footer">
+
+</div>
