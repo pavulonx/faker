@@ -1,14 +1,14 @@
 <div class="modal-header">
   <h4 class="modal-title">Add new endpoint</h4>
-  <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="modal.dismiss('Cross click')">
+  <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="dismissForm('Cross click')">
     <span aria-hidden="true">&times;</span>
   </button>
 </div>
 
-<form [formGroup]="myForm" (ngSubmit)="submitForm()">
+<form [formGroup]="endpointForm" (ngSubmit)="submitForm()">
   <div class="modal-boy">
     <div class="container">
-      <div class="form-group">
+      <div class="form-group" title="If not set, the generated UUID will be used" >
         <label for="ep_name">Name:</label>
         <input id="ep_name" type="text" autofocus
                class="form-control"
@@ -41,16 +41,11 @@
     </div>
   </div>
   <div class="modal-footer">
-    <button class="btn btn-outline-warning" (click)="modal.dismiss('Close clicked')">
+    <button type="reset" class="btn btn-outline-warning" (click)="dismissForm('Close clicked')">
       Cancel
     </button>
-    <button class="btn btn-outline-success" (click)="modal.close('Close added')" [disabled]="!myForm.valid">
+    <button type="submit" class="btn btn-outline-success" [disabled]="!endpointForm.valid">
       Add new
     </button>
   </div>
 </form>
-
-
-<div class="modal-footer">
-
-</div>

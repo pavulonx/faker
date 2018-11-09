@@ -1,6 +1,6 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {NgbActiveModal} from "@ng-bootstrap/ng-bootstrap";
-import {FormBuilder, FormGroup} from "@angular/forms";
+import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 
 @Component({
   selector: 'app-endpoint-modal',
@@ -9,32 +9,46 @@ import {FormBuilder, FormGroup} from "@angular/forms";
 })
 export class EndpointModalComponent implements OnInit {
 
-  @Input()id: number;
-  myForm: FormGroup;
+  endpointForm: FormGroup;
 
-  constructor(
-    public activeModal: NgbActiveModal,
-    private formBuilder: FormBuilder
-  ) {
+  constructor(public activeModal: NgbActiveModal, private formBuilder: FormBuilder) {
     this.createForm();
   }
-  private createForm() {
-    this.myForm = this.formBuilder.group({
-      ep_name: '',
-      ep_desc: '',
-      ep_res_code: '',
-      ep_res_content: '',
-      ep_res_body: ''
-    });
-  }
-  private submitForm() {
-    this.activeModal.close(this.myForm.value);
-  }
+
   ngOnInit() {
   }
 
-  closeModal() {
-    this.activeModal.close('Modal Closed');
+  private createForm() {
+    this.endpointForm = this.formBuilder.group({
+      ep_name: [''],
+      ep_desc: [''],
+      ep_res_code: [200, Validators.required],
+      ep_res_content: [''],
+      ep_res_body: ['']
+    });
+  }
+
+  private submitForm() {
+    this.modal.close(this.toEndpoint(this.endpointForm.value));
+
+  }
+
+  toEndpoint(val): Endpoint {
+    const res: EndpointResponse = {
+      content: val.ep_res_content,
+      code: val.ep_res_code,
+      // headers: val.headers,
+      body: val.ep_res_body,
+    };
+    return {
+      name: val.ep_name,
+      desc: val.ep_desc,
+      response: res
+    }
+  }
+
+  private dismissForm(cause: string) {
+    this.modal.close({cause: cause});
   }
 
   get modal() {

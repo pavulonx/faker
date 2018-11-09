@@ -10,13 +10,15 @@ import {WebsocketService} from "./websocket.service";
 import {HttpClientModule} from "@angular/common/http";
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {EndpointModalComponent} from './workspace/endpoint-modal/endpoint-modal.component';
+import { EndpointTileComponent } from './workspace/endpoint-tile/endpoint-tile.component';
 
 
 @NgModule({
   declarations: [
     AppComponent,
     WorkspaceComponent,
-    EndpointModalComponent
+    EndpointModalComponent,
+    EndpointTileComponent
   ],
   imports: [
     BrowserModule,

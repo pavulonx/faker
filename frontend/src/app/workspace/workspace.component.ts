@@ -10,6 +10,8 @@ import {EndpointModalComponent} from "./endpoint-modal/endpoint-modal.component"
 })
 export class WorkspaceComponent implements OnInit {
 
+  endpoints: Endpoint[] = [{name:"asd", response: {code: 2137}},{name:"asd", response: {code: 2137}}, {name:"asd", response: {code: 2137}}, {name:"asd", response: {code: 2137}}, {name:"asd", response: {code: 2137}}];
+
   constructor(private ws: WebsocketService, private modalService: NgbModal) {
     // ws.getUpdates$.subscribe(e => console.log(e))
   }
@@ -19,14 +21,12 @@ export class WorkspaceComponent implements OnInit {
 
   openEndpointModal() {
     const modalRef = this.modalService.open(EndpointModalComponent);
-    modalRef.componentInstance.id = 10; // should be the id
-
-    modalRef.result.then((result) => {
+    modalRef.result.then((result: Endpoint) => {
       console.log(result);
+      this.endpoints.push(result)
     }).catch((error) => {
       console.log(error);
     });
   }
-
 
 }
