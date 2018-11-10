@@ -1,17 +1,18 @@
 interface Endpoint {
-  name?: String,
-  desc?: String,
-  response: EndpointResponse,
+  name?: string,
+  desc?: string,
+  response: ResponseTemplate,
 }
 
-interface EndpointResponse {
-  code: Number,
-  content?: String,
+interface ResponseTemplate {
+  code: number,
+  contentType?: string,
   headers?: Header[],
-  body?: String,
+  body?: string,
+  delay?: number,
 }
 
 interface Header {
-  key: String,
-  value: String,
+  key: string,
+  value: string,
 }

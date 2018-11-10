@@ -24,7 +24,8 @@ export class EndpointModalComponent implements OnInit {
       ep_desc: [''],
       ep_res_code: [200, Validators.required],
       ep_res_content: [''],
-      ep_res_body: ['']
+      ep_res_body: [''],
+      ep_res_delay: ['']
     });
   }
 
@@ -34,11 +35,12 @@ export class EndpointModalComponent implements OnInit {
   }
 
   toEndpoint(val): Endpoint {
-    const res: EndpointResponse = {
-      content: val.ep_res_content,
+    const res = {
+      contentType: val.ep_res_content,
       code: val.ep_res_code,
       // headers: val.headers,
       body: val.ep_res_body,
+      delay: val.ep_res_delay,
     };
     return {
       name: val.ep_name,

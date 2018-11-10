@@ -23,10 +23,12 @@ object Endpoint {
   implicit val decoder: Decoder[Endpoint] = deriveDecoder
 }
 
+
+//add headers
 case class ResponseTemplate(
                              code: Int,
                              contentType: String,
-                             charset: String,
+//                             headers: Map[String, String],
                              body: String,
                              delay: FiniteDuration
                            )
