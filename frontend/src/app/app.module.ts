@@ -11,6 +11,8 @@ import {HttpClientModule} from "@angular/common/http";
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {EndpointModalComponent} from './workspace/endpoint-modal/endpoint-modal.component';
 import { EndpointTileComponent } from './workspace/endpoint-tile/endpoint-tile.component';
+import {LocalStorageService} from "./local-storage.service";
+import { AboutComponent } from './about/about.component';
 
 
 @NgModule({
@@ -18,7 +20,8 @@ import { EndpointTileComponent } from './workspace/endpoint-tile/endpoint-tile.c
     AppComponent,
     WorkspaceComponent,
     EndpointModalComponent,
-    EndpointTileComponent
+    EndpointTileComponent,
+    AboutComponent
   ],
   imports: [
     BrowserModule,
@@ -30,6 +33,7 @@ import { EndpointTileComponent } from './workspace/endpoint-tile/endpoint-tile.c
   ],
   providers: [
     WebsocketService,
+    LocalStorageService,
     HttpClientModule,
   ],
   bootstrap: [
