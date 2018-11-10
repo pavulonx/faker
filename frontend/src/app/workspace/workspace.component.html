@@ -11,17 +11,18 @@
 
       <!--<div style="height: 500px" class="list-group">-->
       <div>
-        <app-endpoint-tile *ngFor="let endpoint of endpoints" [endpoint]="endpoint"></app-endpoint-tile>
+        <app-endpoint-tile *ngFor="let endpoint of endpoints" [endpoint]="endpoint" routerLink="{{endpoint.uuid}}"></app-endpoint-tile>
       </div>
     </div>
 
 
     <div class="col-10 col-md-9 px-2">
       <div class="ws-header">
-        <h4 class="font-weight-bold text-uppercase">Fetched requests</h4>
+        <h4 class="font-weight-bold text-uppercase">Endpoint detail</h4>
       </div>
       <div class="container-fluid">
-        <img src="http://qnimate.com/wp-content/uploads/2014/03/images2.jpg" class="img-fluid" alt="Responsive image">
+        <!--<img src="http://qnimate.com/wp-content/uploads/2014/03/images2.jpg" class="img-fluid" alt="Responsive image">-->
+        <router-outlet></router-outlet>
       </div>
     </div>
 

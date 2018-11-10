@@ -13,6 +13,7 @@ import {EndpointModalComponent} from './workspace/endpoint-modal/endpoint-modal.
 import { EndpointTileComponent } from './workspace/endpoint-tile/endpoint-tile.component';
 import {LocalStorageService} from "./local-storage.service";
 import { AboutComponent } from './about/about.component';
+import { EndpointDetailsComponent } from './workspace/endpoint-details/endpoint-details.component';
 
 
 @NgModule({
@@ -21,7 +22,8 @@ import { AboutComponent } from './about/about.component';
     WorkspaceComponent,
     EndpointModalComponent,
     EndpointTileComponent,
-    AboutComponent
+    AboutComponent,
+    EndpointDetailsComponent
   ],
   imports: [
     BrowserModule,

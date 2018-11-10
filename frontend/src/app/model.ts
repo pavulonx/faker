@@ -1,4 +1,5 @@
 interface Endpoint {
+  uuid?: string,
   name?: string,
   desc?: string,
   response: ResponseTemplate,

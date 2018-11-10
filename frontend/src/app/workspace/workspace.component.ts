@@ -10,7 +10,18 @@ import {EndpointModalComponent} from "./endpoint-modal/endpoint-modal.component"
 })
 export class WorkspaceComponent implements OnInit {
 
-  endpoints: Endpoint[] = [{name:"asd", response: {code: 2137}},{name:"asd", response: {code: 2137}}, {name:"asd", response: {code: 2137}}, {name:"asd", response: {code: 2137}}, {name:"asd", response: {code: 2137}}];
+  endpoints: Endpoint[] = [
+    {
+      uuid: "uuid1", name: "asd", response: {code: 2137}
+    }, {
+      uuid: "uuid2", name: "asd", response: {code: 2137}
+    }, {
+      uuid: "uuid3", name: "asd", response: {code: 2137}
+    }, {
+      uuid: "uuid4", name: "asd", response: {code: 2137}
+    }, {
+      uuid: "uuid5", name: "asd", response: {code: 2137}
+    }];
 
   constructor(private ws: WebsocketService, private modalService: NgbModal) {
     // ws.getUpdates$.subscribe(e => console.log(e))
