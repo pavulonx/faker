@@ -5,15 +5,17 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
-import {WorkspaceComponent} from "./workspace/workspace.component";
-import {WebsocketService} from "./websocket.service";
-import {HttpClientModule} from "@angular/common/http";
+import {WorkspaceComponent} from './workspace/workspace.component';
+import {WebsocketService} from './websocket.service';
+import {HttpClientModule} from '@angular/common/http';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {EndpointModalComponent} from './workspace/endpoint-modal/endpoint-modal.component';
-import { EndpointTileComponent } from './workspace/endpoint-tile/endpoint-tile.component';
-import {LocalStorageService} from "./local-storage.service";
-import { AboutComponent } from './about/about.component';
-import { EndpointDetailsComponent } from './workspace/endpoint-details/endpoint-details.component';
+import {EndpointTileComponent} from './workspace/endpoint-tile/endpoint-tile.component';
+import {LocalStorageService} from './local-storage.service';
+import {AboutComponent} from './about/about.component';
+import {EndpointDetailsComponent} from './workspace/endpoint-details/endpoint-details.component';
+import {ApiService} from './api.service';
+import {httpInterceptorProviders} from './http-interceptors';
 
 
 @NgModule({
@@ -35,8 +37,10 @@ import { EndpointDetailsComponent } from './workspace/endpoint-details/endpoint-
   ],
   providers: [
     WebsocketService,
+    ApiService,
     LocalStorageService,
     HttpClientModule,
+    httpInterceptorProviders
   ],
   bootstrap: [
     AppComponent
