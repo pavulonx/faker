@@ -9,9 +9,9 @@
         <input class="form-control w-100" type="text" placeholder="Search">
       </form>
 
-      <!--<div style="height: 500px" class="list-group">-->
       <div>
-        <app-endpoint-tile *ngFor="let endpoint of endpoints" [endpoint]="endpoint" routerLink="{{endpoint.uuid}}"></app-endpoint-tile>
+        <app-endpoint-tile *ngFor="let endpoint of endpoints" [endpoint]="endpoint"
+                           routerLink="{{endpoint.uuid}}"></app-endpoint-tile>
       </div>
     </div>
 
@@ -21,7 +21,6 @@
         <h4 class="font-weight-bold text-uppercase">Endpoint detail</h4>
       </div>
       <div class="container-fluid">
-        <!--<img src="http://qnimate.com/wp-content/uploads/2014/03/images2.jpg" class="img-fluid" alt="Responsive image">-->
         <router-outlet></router-outlet>
       </div>
     </div>
