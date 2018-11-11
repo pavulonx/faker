@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {uuid} from 'uuid/v4';
 
-const UUID_KEY: string = "client_uuid";
+const UUID_KEY: string = 'client_uuid';
 
 @Injectable({
   providedIn: 'root'
@@ -17,7 +17,6 @@ export class LocalStorageService {
       const newUuid = uuid.v4();
       localStorage.setItem(UUID_KEY, newUuid);
       return newUuid;
-
     } else return clientUuid;
   }
 

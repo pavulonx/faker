@@ -1,5 +1,7 @@
 import {Component, OnInit} from '@angular/core';
-import {ActivatedRoute} from "@angular/router";
+import {ActivatedRoute} from '@angular/router';
+import {ApiService} from '../../api.service';
+import {flatMap, map} from 'rxjs/operators';
 
 @Component({
   selector: 'app-endpoint-details',
@@ -8,15 +10,17 @@ import {ActivatedRoute} from "@angular/router";
 })
 export class EndpointDetailsComponent implements OnInit {
 
-  uuid: string = null;
+  endpointInfo: Endpoint = null;
 
-  constructor(private route: ActivatedRoute) {
+  constructor(private route: ActivatedRoute, private apiService: ApiService) {
   }
 
   ngOnInit() {
-    this.route.params.subscribe(params =>
-      this.uuid = params['endpointUuid']
-    )
+    this.route.params
+      .pipe(
+        map(params => params['endpointUuid']),
+        flatMap(uuid => this.apiService.getEndpoint(uuid))
+      ).subscribe(endpoint => this.endpointInfo = endpoint);
   }
 
 }
