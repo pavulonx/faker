@@ -3,15 +3,18 @@ organization in ThisBuild := "cf.jrozen"
 
 enablePlugins(GitVersioning)
 
-val Http4sVersion = "0.20.0-M1" //todo: upgrade to stable 0.20.x series
+val Http4sVersion = "0.20.0-M2" //todo: upgrade to stable 0.20.x series
 val Specs2Version = "4.2.0"
 val LogbackVersion = "1.2.3"
 val CirceVersion = "0.10.1"
 val KafkaSerializationV = "0.3.16"
-val fs2KafkaVersion = "0.16.1"  /// watch for new versions
+val fs2KafkaVersion = "0.16.2" /// watch for new versions
 val fs2V = "1.0.0"
+val CatsEffV = "1.0.0"
 val PureConfigVersion = "0.9.2"
-
+val MongoV = "3.8.2"
+//lazy val catsEffect = "org.typelevel" %% "cats-effect" % "1.0.0"
+//lazy val fs2Core = "co.fs2" %% "fs2-core" % fs2V
 
 val Success = 0
 val Error = 1
@@ -85,7 +88,9 @@ lazy val mongo = (project in file("mongo"))
   .settings(commonSettings)
   .settings(
     libraryDependencies ++= Seq(
-      "org.lyranthe" %% "fs2-mongodb" % "0.5.0",
+      "org.mongodb" % "mongodb-driver-async" % MongoV,
+      "org.typelevel" %% "cats-effect" % CatsEffV,
+      "co.fs2" %% "fs2-core" % fs2V,
       "ch.qos.logback" % "logback-classic" % LogbackVersion
     ) ++ circeDependencies
   ).dependsOn(model)

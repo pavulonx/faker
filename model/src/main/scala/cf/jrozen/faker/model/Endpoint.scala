@@ -39,14 +39,14 @@ object ResponseTemplate {
   implicit val decoder: Decoder[ResponseTemplate] = deriveDecoder
 }
 
-object Test extends App {
-
-  import io.circe.syntax._
-
-  private val endp = Endpoint("qwer", Instant.now(), "dupa", "dome dupa endpoint", ResponseTemplate(1, "text", "chuj", "{x : {}}", FiniteDuration(1, "second")))
-
-  private val json = endp.asJson.toString()
-  println(json)
-
-  //  println(decode[Endpoint](json).map(_.responseTemplate.delay.toCoarsest))
-}
+//object Test extends App {
+//
+//  import io.circe.syntax._
+//
+//  private val endp = Endpoint("qwer", Instant.now(), "dupa", "dome dupa endpoint", ResponseTemplate(1, "text", "chuj", "{x : {}}", FiniteDuration(1, "second")))
+//
+//  private val json = endp.asJson.toString()
+//  println(json)
+//
+//  //  println(decode[Endpoint](json).map(_.responseTemplate.delay.toCoarsest))
+//}
