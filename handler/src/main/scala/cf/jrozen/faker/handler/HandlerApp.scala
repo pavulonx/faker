@@ -28,7 +28,6 @@ object HandlerApp extends IOApp {
     import scala.concurrent.duration._
 
     BlazeServerBuilder[F]
-//      .bindHttp(8810, "localhost")
       .bindHttp(8810, "localhost")
       .withIdleTimeout(3 second)
       .withHttpApp(httpApp)

@@ -5,5 +5,5 @@ case class KafkaServerInfo(host: String, port: Int = 9092) {
 }
 
 object KafkaServerInfo {
-  def localDefault: KafkaServerInfo = new KafkaServerInfo("localhost")
+  def localDefault: KafkaServerInfo = new KafkaServerInfo("10.1.1.21")
 }

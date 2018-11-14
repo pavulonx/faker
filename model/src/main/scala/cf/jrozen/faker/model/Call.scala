@@ -12,10 +12,6 @@ case class Call(
                )
 
 object Call {
-
-  object Endpoint {
-    implicit val encoder: Encoder[Call] = deriveEncoder
-    implicit val decoder: Decoder[Call] = deriveDecoder
-  }
-
+  implicit val encoder: Encoder[Call] = deriveEncoder
+  implicit val decoder: Decoder[Call] = deriveDecoder
 }

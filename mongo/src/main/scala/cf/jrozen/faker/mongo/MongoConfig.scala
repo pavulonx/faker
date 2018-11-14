@@ -5,5 +5,5 @@ case class MongoConfig(host: String, port: Int = 27017) {
 }
 
 object MongoConfig {
-  def localDefault: MongoConfig = new MongoConfig("localhost")
+  def localDefault: MongoConfig = new MongoConfig("10.1.1.10")
 }
