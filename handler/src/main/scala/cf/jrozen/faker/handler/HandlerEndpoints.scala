@@ -1,9 +1,10 @@
 package cf.jrozen.faker.handler
 
-import cats.effect.{Effect, IO, Sync}
+import cats.effect.{IO, Sync}
 import io.circe.{Encoder, Json}
+import org.http4s.Request.Keys
 import org.http4s.dsl.Http4sDsl
-import org.http4s.{HttpRoutes, Method, Request, Response}
+import org.http4s.{EntityEncoder, HttpRoutes, Method, Request, Response}
 
 class HandlerEndpoints[F[_]](handlerService: HandlerService[F])(implicit S: Sync[F]) extends Http4sDsl[F] {
 
@@ -35,18 +36,23 @@ object Test extends App {
   //  import io.circe.._
 
 
-  type F <: Effect[F]
+  //  type F <: Effect[IO]
 
-  implicit val encoder: Encoder[Request[F]] = new Encoder[Request[F]] {
-    override def apply(req: Request[F]): Json = Json.obj (
+  implicit val ee = EntityEncoder.entityBodyEncoder[IO]
+
+  implicit val encoder: Encoder[Request[IO]] = new Encoder[Request[IO]] {
+    override def apply(req: Request[IO]): Json = Json.obj(
       ("method", Json.fromString(req.method.name)),
-      ("uri", Json.fromString(req.uri)),
-      ("httpVersion", Json.fromString(req.httpVersion)),
-      ("headers", Json.fromString(req.headers)),
-      ("body", Json.fromString(req.body)),
-      ("attributes", Json.fromString(req.attributes)),
-      (),
-      ()
+      ("uri", Json.fromString(req.uri.renderString)),
+      ("httpVersion", Json.fromString(req.httpVersion.renderString)),
+      ("headers", Json.arr(req.headers.map(s => Json.fromString(s.renderString)).toSeq: _*)),
+      ("body", ee.toEntity(req.body).asJson),
+      ("connectionInfo", Json.obj(
+        ("local", Json.fromString(req.attributes.get(Keys.ConnectionInfo).map(_.local.toString).orNull)),
+        ("remote", Json.fromString(req.attributes.get(Keys.ConnectionInfo).map(_.remote.toString).orNull)),
+        ("secure", Json.fromBoolean(req.attributes.get(Keys.ConnectionInfo).map(_.secure).getOrElse(false)))
+      )),
+      ("serverSoftware", Json.fromString(req.attributes.get(Keys.ServerSoftware).map(_.product).orNull))
     )
   }
 
