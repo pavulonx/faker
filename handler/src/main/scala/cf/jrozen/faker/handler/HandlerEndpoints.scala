@@ -1,8 +1,9 @@
 package cf.jrozen.faker.handler
 
-import cats.effect.Sync
-import org.http4s.dsl._
-import org.http4s.{HttpRoutes, Method, Response}
+import cats.effect.{Effect, IO, Sync}
+import io.circe.{Encoder, Json}
+import org.http4s.dsl.Http4sDsl
+import org.http4s.{HttpRoutes, Method, Request, Response}
 
 class HandlerEndpoints[F[_]](handlerService: HandlerService[F])(implicit S: Sync[F]) extends Http4sDsl[F] {
 
@@ -25,3 +26,32 @@ object HandlerEndpoints {
   }
 }
 
+
+object Test extends App {
+
+  private val rq = Request[IO]()
+
+  import io.circe.syntax._
+  //  import io.circe.._
+
+
+  type F <: Effect[F]
+
+  implicit val encoder: Encoder[Request[F]] = new Encoder[Request[F]] {
+    override def apply(req: Request[F]): Json = Json.obj (
+      ("method", Json.fromString(req.method.name)),
+      ("uri", Json.fromString(req.uri)),
+      ("httpVersion", Json.fromString(req.httpVersion)),
+      ("headers", Json.fromString(req.headers)),
+      ("body", Json.fromString(req.body)),
+      ("attributes", Json.fromString(req.attributes)),
+      (),
+      ()
+    )
+  }
+
+  private val json = rq.asJson.toString()
+  println(json)
+
+  //  println(decode[Endpoint](json).map(_.responseTemplate.delay.toCoarsest))
+}

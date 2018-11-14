@@ -80,6 +80,7 @@ lazy val handler = (project in file("handler"))
       "com.github.pureconfig" %% "pureconfig" % PureConfigVersion,
       "ch.qos.logback" % "logback-classic" % LogbackVersion
     ) ++ http4sDependencies
+      ++ circeDependencies
       ++ testDependencies
   ).dependsOn(model, kafka, mongo)
 
