@@ -31,6 +31,7 @@
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \documentclass[inzynierska]{pwr_wmat_praca_dyplomowa}
+\usepackage{graphicx}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %              DANE DO PRACY
 %
@@ -72,7 +73,7 @@
 % 5) Statystyka i analiza danych, 
 %
 % 6) -- (w przypadku braku specjalizacji).
-\specjalnosc{--} 
+\specjalnosc{--}
 %
 % Specjalność w języku angielskim wybieramy spośród następujących:
 % KIERUNEK: Matematyka
@@ -91,17 +92,25 @@
 % 9) Modelling, Simulation and Optimization.
 %
 % 10) -- (w przypadku braku specjalizacji).
-\specjalnoscang{--} 
+\specjalnoscang{--}
 %
 % Krótkie streszczenia po polsku i angielsku
 % - nie dłuższe niż 530 znaków.
-\streszczenie{Tutaj piszemy krótkie streszczenie pracy (nie powinno być dłuższe niż 530 znaków).}
-\streszczenieang{Tutaj piszemy krótkie streszczenie pracy w języku angielskim (nie powinno być dłuższe niż 530 znaków).}
+\streszczenie{Zostanie rozwiązywany problem
+oraz zostaną przedstawione rozwiązania konkurencyjne. Zostanie opracowana i przedstawiona
+architektura aplikacji, a także zostanie dokonana analiza jej wpływu na kwestie utrzymania i niezawodności.
+Trzeci rozdział będzie zawierał opis technologii wykorzystywanych w ramach pracy i ich wpływu na proces implementacyjny wraz z
+zakończy jej podsumowanie, gdzie zostaną określone dalsze możliwości rozwoju.}
+\streszczenieang{Zostanie rozwiązywany problem
+oraz zostaną przedstawione rozwiązania konkurencyjne. Zostanie opracowana i przedstawiona
+Trzeci rozdział będzie zawierał opis technologii wykorzystywanych w ramach pracy i ich wpływu na proces implementacyjny wraz z
+projektu realizowanej aplikacji. W przedostatnim rozdziale zaprezentowana zostanie zrealizowana aplikacja. Pracę
+zakończy jej podsumowanie, gdzie zostaną określone dalsze możliwości rozwoju.}
 %
 % Podajemy najważniejsze słowa kluczowe po polsku i angielsku
 % - w obu przypadkach, nie więcej niż 150 znaków.
-\slowakluczowe{tutaj podajemy najważniejsze słowa kluczowe (łącznie nie powinny być dłuższe niż 150 znaków).}  
-\slowakluczoweang{tutaj podajemy najważniejsze słowa kluczowe w języku angielskim (łącznie nie powinny być dłuższe niż 150 znaków)}
+\slowakluczowe{programowanie funkcyjne mikroserwisy aplikacja webowa scala haskell}
+\slowakluczoweang{functional programming microservices web app scala haskell}
 %
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -112,12 +121,12 @@
 \theoremstyle{plain}
 \newtheorem{theorem}{Twierdzenie}
 \numberwithin{theorem}{chapter}
-\newtheorem{lemma}[theorem]{Lemat} 
+\newtheorem{lemma}[theorem]{Lemat}
 \newtheorem{corollary}[theorem]{Wniosek}
 \newtheorem{fact}[theorem]{Fakt}
 \theoremstyle{definition}
 \numberwithin{theorem}{chapter}
-\newtheorem{definition}[theorem]{Definicja} 
+\newtheorem{definition}[theorem]{Definicja}
 \newtheorem{example}[theorem]{Przykład}
 \newtheorem{note}[theorem]{Uwaga}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -126,134 +135,134 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{document}
-\frontmatter
-\maketitle
-\mainmatter
-\tableofcontents
-%\listoffigures
-%\listoftables
+    \frontmatter
+    \maketitle
+    \mainmatter
+    \tableofcontents
+    %\listoffigures
+    %\listoftables
 
-{\backmatter \chapter{Wstęp}}
-We wstępie zapowiadamy, o czym będzie praca. Próbujemy zachęcić czytelnika do dalszej lektury, np. krótko informując, dlaczego wybraliśmy właśnie ten temat i co nas w nim zainteresowało.
+    {\backmatter \chapter{Wstęp}}
+    We wstępie zapowiadamy, o czym będzie praca. Próbujemy zachęcić czytelnika do dalszej lektury, np. krótko informując, dlaczego wybraliśmy właśnie ten temat i co nas w nim zainteresowało.
 
-\chapter{Rozdział pierwszy}
-Tabela \ref{tab:przykladowa} przedstawia przykładową tabelę. Do tworzenia tabeli służą m.in. środowiska \texttt{tabular} oraz \texttt{table}. Istnieje możliwość numeracji dwustopniowej, gdzie pierwsza cyfra oznacza numer rozdziału, a druga – kolejny numer tabeli w tym rozdziale. Tytuł powinien znajdować się centralnie nad tabelą, $12$ pkt odstępu od tekstu zasadniczego nad i pod tabelą wraz z tytułem. Jeśli tabela jest cytowana – należy podać centralnie pod tabelą źródło jej pochodzenia, np. opracowanie własne, opracowano na podstawie danych z GUS.
-\begin{table}[ht]
-\caption{Podstawowa Tabela}
-\centering
-\begin{tabular}{ccc}
-\hline
-\hline                       
-Państwo & PKB (w milionach USD )& Stopa bezrobocia  \\  [0.5ex] 
-\hline 
-Stany Zjednoczone & 75 278 049 & 4,60\%  \\
-Chiny & 11 218 281 & 4,10\%   \\
-Japonia & 4 938 644 & 3,10\%  \\
-Niemcy & 3 466 639 & 6,00\%   \\
-Wielka Brytania & 2 629 188 & 4,60\%  \\ [1ex]  
-\hline 
-\end{tabular}
-\caption*{\textit{Źródło: opracowanie własne}}
-\label{tab:przykladowa} 
-\end{table}
+    \chapter{Rozdział pierwszy}
+    Tabela \ref{tab:przykladowa} przedstawia przykładową tabelę. Do tworzenia tabeli służą m.in. środowiska \texttt{tabular} oraz \texttt{table}. Istnieje możliwość numeracji dwustopniowej, gdzie pierwsza cyfra oznacza numer rozdziału, a druga – kolejny numer tabeli w tym rozdziale. Tytuł powinien znajdować się centralnie nad tabelą, $12$ pkt odstępu od tekstu zasadniczego nad i pod tabelą wraz z tytułem. Jeśli tabela jest cytowana – należy podać centralnie pod tabelą źródło jej pochodzenia, np. opracowanie własne, opracowano na podstawie danych z GUS.
+    \begin{table}[ht]
+        \caption{Podstawowa Tabela}
+        \centering
+        \begin{tabular}{ccc}
+            \hline
+            \hline
+            Państwo & PKB (w milionach USD )& Stopa bezrobocia  \\  [0.5ex]
+            \hline
+            Stany Zjednoczone & 75 278 049 & 4,60\%  \\
+            Chiny & 11 218 281 & 4,10\%   \\
+            Japonia & 4 938 644 & 3,10\%  \\
+            Niemcy & 3 466 639 & 6,00\%   \\
+            Wielka Brytania & 2 629 188 & 4,60\%  \\ [1ex]
+            \hline
+        \end{tabular}
+        \caption*{\textit{Źródło: opracowanie własne}}
+        \label{tab:przykladowa}
+    \end{table}
 
-Do cytowania używamy komendy \texttt{cite}. W nawiasie klamrowym podajemy klucz, którego użyliśmy w pliku \emph{bibliografia.bib}. Przykład: \cite{einstein} lub \cite[chap. 2]{latexcompanion}.
+    Do cytowania używamy komendy \texttt{cite}. W nawiasie klamrowym podajemy klucz, którego użyliśmy w pliku \emph{bibliografia.bib}. Przykład: \cite{einstein} lub \cite[chap. 2]{latexcompanion}.
 
-\section{Podrozdział pierwszy}
+    \section{Podrozdział pierwszy}
 
-\begin{table}[H]
-\caption{Podstawowa Tabela}
-\centering
-\begin{tabular}{ccc}
-\hline
-\hline                       
-Państwo & PKB (w milionach USD )& Stopa bezrobocia  \\  [0.5ex] 
-\hline 
-Stany Zjednoczone & 75 278 049 & 4,60\%  \\
-Chiny & 11 218 281 & 4,10\%   \\
-Japonia & 4 938 644 & 3,10\%  \\
-Niemcy & 3 466 639 & 6,00\%   \\
-Wielka Brytania & 2 629 188 & 4,60\%  \\ [1ex]  
-\hline 
-\end{tabular}
-\caption*{\textit{Źródło: opracowanie własne}}
-\label{tab:przykladowa2} 
-\end{table}
+    \begin{table}[H]
+        \caption{Podstawowa Tabela}
+        \centering
+        \begin{tabular}{ccc}
+            \hline
+            \hline
+            Państwo & PKB (w milionach USD )& Stopa bezrobocia  \\  [0.5ex]
+            \hline
+            Stany Zjednoczone & 75 278 049 & 4,60\%  \\
+            Chiny & 11 218 281 & 4,10\%   \\
+            Japonia & 4 938 644 & 3,10\%  \\
+            Niemcy & 3 466 639 & 6,00\%   \\
+            Wielka Brytania & 2 629 188 & 4,60\%  \\ [1ex]
+            \hline
+        \end{tabular}
+        \caption*{\textit{Źródło: opracowanie własne}}
+        \label{tab:przykladowa2}
+    \end{table}
 
-\section{Podrozdział drugi}
+    \section{Podrozdział drugi}
 
-Rysunki do pracy dyplomowej należy wstawiać w sposób podobny do wstawiania tabel, z~zasadniczą różnicą polegającą na tym, że podpis powinno umieszczać się centralnie pod rysunkiem, a nie powyżej niego. Numeracja i sposób cytowania pozostają bez zmian, przy czym tabele i rysunki nie mają numeracji wspólnej, np. po Tabeli \ref{tab:przykladowa2} występuje Rysunek \ref{rys1} (o ile jest to pierwszy rysunek rozdziału pierwszego), a nie Rysunek $1.3$.
+    Rysunki do pracy dyplomowej należy wstawiać w sposób podobny do wstawiania tabel, z~zasadniczą różnicą polegającą na tym, że podpis powinno umieszczać się centralnie pod rysunkiem, a nie powyżej niego. Numeracja i sposób cytowania pozostają bez zmian, przy czym tabele i rysunki nie mają numeracji wspólnej, np. po Tabeli \ref{tab:przykladowa2} występuje Rysunek \ref{rys1} (o ile jest to pierwszy rysunek rozdziału pierwszego), a nie Rysunek $1.3$.
 
-\begin{figure}[ht]
+    \begin{figure}[ht]
 
-\centering
-                     
-\includegraphics[scale=0.27]{logo_w13.jpg}
-\caption{Podstawowy Rysunek}\label{rys1}
-\end{figure}
-\label{rys:przykladowy} 
+        \centering
 
-\chapter{Przegląd technologii}
-\section{Postgres}
-\section{Typescript}
-\section{Django}
-\section{Node.js}
-\section{Hapi.js}
-\section{Vue.js}
-\section{Angular}
-\section{React}
-\section{Docker}
+        \includegraphics[scale=0.27]{logo_w13.jpg}
+        \caption{Podstawowy Rysunek}\label{rys1}
+    \end{figure}
+    \label{rys:przykladowy}
 
-\chapter{Konkurencyjne rozwiązania}
+    \chapter{Przegląd technologii}
+    \section{Postgres}
+    \section{Typescript}
+    \section{Django}
+    \section{Node.js}
+    \section{Hapi.js}
+    \section{Vue.js}
+    \section{Angular}
+    \section{React}
+    \section{Docker}
 
-\chapter{Szczegółowy opis technologii}
-\chapter{Projekt}
-\section{Wymagania}
-\subsection{Funkcjonalne}
-\subsection{Niefunkcjonalne}
-\chapter{Implementacja}
-\section{Backend}
-\subsection{Django-like ORM}
-\section{Frontend}
-\chapter{Wrożenie}
-\chapter{Testy}
+    \chapter{Konkurencyjne rozwiązania}
 
-
+    \chapter{Szczegółowy opis technologii}
+    \chapter{Projekt}
+    \section{Wymagania}
+    \subsection{Funkcjonalne}
+    \subsection{Niefunkcjonalne}
+    \chapter{Implementacja}
+    \section{Backend}
+    \subsection{Django-like ORM}
+    \section{Frontend}
+    \chapter{Wrożenie}
+    \chapter{Testy}
 
 
-\chapter{Definicje, lematy, twierdzenia, przykłady i wnioski}
-Definicje, lematy, twierdzenia, przykłady i wnioski piszemy w pracy tak:
-\begin{definition}[Martyngał]
-Tu piszemy treść definicji martyngału.
-\end{definition}
-\begin{lemma}[]% w nawiasie kwadratowym można napisać jego nazwę
-Tu piszemy treść lematu.
-\end{lemma}
 
-{\backmatter \chapter{Podsumowanie}}
-Podsumowanie w pracach matematycznych nie jest obligatoryjne. Warto jednak na zakończenie krótko napisać, co udało nam się zrobić w pracy, a czasem także o tym, czego nie udało się zrobić.
 
-{\backmatter \chapter{Dodatek}}
-Dodatek w pracach matematycznych również nie jest wymagany. Można w nim przedstawić np. jakiś dłuższy dowód, który z pewnych przyczyn pominęliśmy we właściwej części pracy lub (np. w przypadku prac statystycznych) umieścić dane, które analizowaliśmy.
+    \chapter{Definicje, lematy, twierdzenia, przykłady i wnioski}
+    Definicje, lematy, twierdzenia, przykłady i wnioski piszemy w pracy tak:
+    \begin{definition}[Martyngał]
+        Tu piszemy treść definicji martyngału.
+    \end{definition}
+    \begin{lemma}[]% w nawiasie kwadratowym można napisać jego nazwę
+        Tu piszemy treść lematu.
+    \end{lemma}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% BIBLIOGRAFIA
-% W tworzeniu bibliografii najlepiej korzystać z BibTex'a, 
-% który jest częścią systemu Tex. W naszym przypadku funkcję 
-% przechowalni literatury, do której się odwołujemy, pełni 
-% plik bibliografia.bib. Nie musimy ręcznie dodawać nowych 
-% pozycji do bibliografii. Możemy wejść np. na stronę 
-% https://mathscinet.ams.org/mathscinet/index.html, 
-% znaleźć odpowiednią pozycję, wybrać ją, a następnie zmienić 
-% 'Select alternative format' na BibTeX, skopiować uzyskany 
-% tekst, wkleić do pliku bibliografia.bib i skompilować. 
-% Gotowe informacje do pliku bibliografia.bib można znaleźć 
-% także na https://arxiv.org - gdy znajdziemy interesującą nas 
-% pracę, szukamy 'References & Citations' i klikamy 'NASA ADS', 
-% a potem 'Bibtex entry for this abstract' 
-% i postępujemy tak jak wcześniej.
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\newpage
-% w nawiasie klamrowym wpisujemy nazwę pliku z bibliografią w formacie .bib
-\bibliografia{bibliografia} 
+    {\backmatter \chapter{Podsumowanie}}
+    Podsumowanie w pracach matematycznych nie jest obligatoryjne. Warto jednak na zakończenie krótko napisać, co udało nam się zrobić w pracy, a czasem także o tym, czego nie udało się zrobić.
+
+    {\backmatter \chapter{Dodatek}}
+    Dodatek w pracach matematycznych również nie jest wymagany. Można w nim przedstawić np. jakiś dłuższy dowód, który z pewnych przyczyn pominęliśmy we właściwej części pracy lub (np. w przypadku prac statystycznych) umieścić dane, które analizowaliśmy.
+
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    % BIBLIOGRAFIA
+    % W tworzeniu bibliografii najlepiej korzystać z BibTex'a,
+    % który jest częścią systemu Tex. W naszym przypadku funkcję
+    % przechowalni literatury, do której się odwołujemy, pełni
+    % plik bibliografia.bib. Nie musimy ręcznie dodawać nowych
+    % pozycji do bibliografii. Możemy wejść np. na stronę
+    % https://mathscinet.ams.org/mathscinet/index.html,
+    % znaleźć odpowiednią pozycję, wybrać ją, a następnie zmienić
+    % 'Select alternative format' na BibTeX, skopiować uzyskany
+    % tekst, wkleić do pliku bibliografia.bib i skompilować.
+    % Gotowe informacje do pliku bibliografia.bib można znaleźć
+    % także na https://arxiv.org - gdy znajdziemy interesującą nas
+    % pracę, szukamy 'References & Citations' i klikamy 'NASA ADS',
+    % a potem 'Bibtex entry for this abstract'
+    % i postępujemy tak jak wcześniej.
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    \newpage
+    % w nawiasie klamrowym wpisujemy nazwę pliku z bibliografią w formacie .bib
+    \bibliografia{bibliografia}
 \end{document}
