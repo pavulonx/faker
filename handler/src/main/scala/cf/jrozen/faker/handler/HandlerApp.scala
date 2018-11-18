@@ -34,7 +34,7 @@ object HandlerApp extends IOApp {
       .serve
   }
 
-  def createApp[F[_] : Sync](handlerService: HandlerService[F]) = {
+  def createApp[F[_] : Sync: Timer](handlerService: HandlerService[F]) = {
     Router {
       "/endpoint" -> HandlerEndpoints.endpoints[F](handlerService)
       //      "/service" -> //todo: create common service mapping for diagnostics
