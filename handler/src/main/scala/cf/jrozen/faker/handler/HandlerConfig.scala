@@ -6,7 +6,7 @@ import cf.jrozen.faker.kafka.KafkaServerInfo
 import cf.jrozen.faker.mongo.MongoConfig
 import pureconfig.error.ConfigReaderException
 
-case class HandlerConfig(mongo: MongoConfig, kafka: KafkaServerInfo)
+case class HandlerConfig(mongo: MongoConfig, kafka: KafkaServerInfo, notificationsTopic: String)
 
 object HandlerConfig {
 

@@ -13,7 +13,7 @@ class NotifierService[F[_] : ConcurrentEffect : ContextShift : Timer](val kafkaS
 
   def subscribe(clientId: String): Stream[F, WebSocketFrame] = {
 
-    val consumerSettings = KafkaConfiguration.consumerSettings[Json](s"notifier_$clientId", kafkaServerInfo)
+    val consumerSettings = KafkaConfiguration.consumerSettings[String](s"notifier_$clientId", kafkaServerInfo)
     (for {
       executionContext <- consumerExecutionContextStream[F]
       consumer <- consumerStream[F].using(consumerSettings(executionContext))

@@ -24,7 +24,7 @@ export class WorkspaceComponent implements OnInit {
     }];
 
   constructor(private ws: WebsocketService, private modalService: NgbModal) {
-    // ws.getUpdates$.subscribe(e => console.log(e))
+    ws.getUpdates$.subscribe(e => console.log(e))
   }
 
   ngOnInit() {

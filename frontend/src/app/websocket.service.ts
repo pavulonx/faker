@@ -9,7 +9,7 @@ import {LocalStorageService} from './local-storage.service';
 export class WebsocketService {
 
   private _wsSubject: WebSocketSubject<any>;
-  private wsUrl = 'ws://localhost:8180/notifications/';
+  private wsUrl = 'ws://localhost:8280/notifications/';
 
   constructor(private localStorageService: LocalStorageService) {
   }

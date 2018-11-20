@@ -10,7 +10,7 @@ object NotifierApp extends IOApp {
   override def run(args: List[String]): IO[ExitCode] = {
 
     import cats.implicits._
-    val kafkaServerInfo = KafkaServerInfo("172.22.0.2")
+    val kafkaServerInfo = KafkaServerInfo("10.1.1.21")
     IO(println("Starting notifier")) *>
       IO(println(kafkaServerInfo)) *> {
       val notifierService = NotifierService[IO](kafkaServerInfo)

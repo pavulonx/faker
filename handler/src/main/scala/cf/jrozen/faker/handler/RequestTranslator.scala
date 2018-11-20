@@ -41,5 +41,3 @@ class RequestTranslator[F[_] : Sync](implicit F: Functor[F]) {
 object RequestTranslator {
   @inline def apply[F[_]](implicit F: Sync[F]): RequestTranslator[F] = new RequestTranslator[F]()
 }
-
-

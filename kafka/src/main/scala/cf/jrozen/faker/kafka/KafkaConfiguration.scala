@@ -7,7 +7,6 @@ import org.apache.kafka.common.serialization.{Deserializer, Serializer, StringDe
 
 import scala.concurrent.ExecutionContext
 import scala.language.postfixOps
-import scala.util.Try
 
 object KafkaConfiguration {
 
@@ -27,24 +26,6 @@ object KafkaConfiguration {
   def producerSettings[V: Encoder](kafkaServerInfo: KafkaServerInfo): ProducerSettings[String, V] =
     ProducerSettings(keySerializer = new StringSerializer, valueSerializer = jsonSerializer[V])
       .withBootstrapServers(kafkaServerInfo.url)
-
-  //  def consumeTopic[F[_] : Effect, T: Decoder](topic: String, settings: ConsumerSettings)
-  //                                             (implicit ec: ExecutionContext): fs2.Stream[F, ConsumerRecord[String, T]] =
-  //    consume[F](
-  //      TopicSubscription(Set(topic)),
-  //      new StringDeserializer,
-  //      jsonDeserializer[T],
-  //      settings
-  //    )
-  //
-  //  def consumeTopic[F[_] : Effect, T: Decoder](topic: String, settings: ConsumerSettings)
-  //                                             (implicit ec: ExecutionContext): fs2.Stream[F, ConsumerRecord[String, T]] =
-  //    produce[F](
-  //      TopicSubscription(Set(topic)),
-  //      new StringDeserializer,
-  //      jsonDeserializer[T],
-  //      settings
-  //    )
 
 
   private def jsonSerializer[T: Encoder]: Serializer[T] = circeJsonSerializer[T]

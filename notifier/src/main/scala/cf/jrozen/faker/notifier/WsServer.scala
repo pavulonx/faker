@@ -13,7 +13,7 @@ object WsServer {
   def server[F[_] : Effect](notifierService: NotifierService[F])
                            (implicit cEff: ConcurrentEffect[F], cs: ContextShift[F], ec: ExecutionContext, timer: Timer[F]): Stream[F, ExitCode] =
     BlazeServerBuilder[F]
-      .bindHttp(port = 8080)
+      .bindHttp(port = 8280)
       .withWebSockets(true)
       .withHttpApp(NotifierEndpoints.app[F](notifierService))
       .withIdleTimeout(5 minutes) //todo: send ping responses by ws to avoid idle state issue
