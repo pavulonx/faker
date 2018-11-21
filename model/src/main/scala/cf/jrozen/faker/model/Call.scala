@@ -7,8 +7,10 @@ import io.circe.{Decoder, Encoder}
 
 
 case class Call(
-                 uuid: String,
+                 callUuid: String,
+                 endpointUuid: String,
                  timestamp: Instant,
+
                  request: Request
                )
 

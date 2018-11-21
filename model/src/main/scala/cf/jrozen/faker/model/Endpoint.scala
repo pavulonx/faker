@@ -2,14 +2,15 @@ package cf.jrozen.faker.model
 
 import java.time.Instant
 
-import io.circe._
 import io.circe.generic.semiauto._
+import io.circe.{Decoder, Encoder}
 
 import scala.concurrent.duration.FiniteDuration
 
 case class Endpoint(
-                     uuid: String,
-                     timestamp: Instant,
+                     endpointUuid: String,
+
+                     createdAt: Instant,
 
                      name: String,
                      description: String,
@@ -22,7 +23,6 @@ object Endpoint {
   implicit val decoder: Decoder[Endpoint] = deriveDecoder
 }
 
-
 //add headers
 case class ResponseTemplate(
                              code: Int,
@@ -31,7 +31,6 @@ case class ResponseTemplate(
                              body: String,
                              delay: FiniteDuration
                            )
-
 
 object ResponseTemplate {
   implicit val encoder: Encoder[ResponseTemplate] = deriveEncoder

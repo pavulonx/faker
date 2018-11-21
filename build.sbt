@@ -69,8 +69,9 @@ lazy val api = (project in file("api"))
     libraryDependencies ++= Seq(
       "ch.qos.logback" % "logback-classic" % LogbackVersion
     ) ++ http4sDependencies
+      ++ circeDependencies
       ++ testDependencies
-  )
+  ).dependsOn(model, kafka, mongo)
 
 lazy val handler = (project in file("handler"))
   .settings(moduleName := "handler", name := "handler")
