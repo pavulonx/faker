@@ -32,6 +32,14 @@ class WorkspaceEndpoints[F[_] : Effect : Functor] extends Http4sDsl[F] {
       }
   }
 
+  def deleteWorkspaceEndpoint(workspaceService: WorkspaceService[F]): HttpRoutes[F] = HttpRoutes.of[F] {
+    case DELETE -> Root / "workspace" / workspaceId =>
+      workspaceService.deleteWorkspace(workspaceId).value >>= {
+        case Right(u: Workspace) => Ok(u.asJson)
+        case Left(WorkspaceNotFoundError) => NotFound()
+      }
+  }
+
   def endpoints(workspaceService: WorkspaceService[F]): HttpRoutes[F] =
     getWorkspaceEndpoint(workspaceService) <+> addWorkspaceEndpoint(workspaceService)
 

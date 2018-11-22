@@ -9,6 +9,10 @@ import scala.concurrent.duration.FiniteDuration
 
 package object model {
 
+  type UUID = String
+
+  def rndUuid(): UUID = UUID.randomUUID().toString
+
   implicit val finiteDurationEncoder: Encoder[FiniteDuration] = new Encoder[FiniteDuration] {
     override def apply(fd: FiniteDuration): Json = Json.fromLong(fd toMillis)
   }
@@ -20,5 +24,4 @@ package object model {
     override def apply(c: HCursor): Result[FiniteDuration] = Decoder.decodeLong(c).map(_ milliseconds)
   }
 
-  def rndUuid(): String = UUID.randomUUID().toString
 }

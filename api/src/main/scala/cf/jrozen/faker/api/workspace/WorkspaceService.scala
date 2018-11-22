@@ -3,7 +3,7 @@ package cf.jrozen.faker.api.workspace
 import cats.data.EitherT
 import cats.{Functor, Monad}
 import cf.jrozen.faker.api.{WorkspaceAlreadyExistsError, WorkspaceNotFoundError}
-import cf.jrozen.faker.model.Workspace
+import cf.jrozen.faker.model.{UUID, Workspace}
 import cf.jrozen.faker.mongo.repository.WorkspaceRepository
 
 class WorkspaceService[F[_] : Monad : Functor](workspaceRepository: WorkspaceRepository[F], workspaceValidationAlgebra: WorkspaceValidationAlgebra[F]) {
@@ -15,7 +15,13 @@ class WorkspaceService[F[_] : Monad : Functor](workspaceRepository: WorkspaceRep
     }
   }
 
-  def getWorkspace(workspaceId: String): EitherT[F, WorkspaceNotFoundError.type, Workspace] = ???
+  def getWorkspace(workspaceUuid: UUID): EitherT[F, WorkspaceNotFoundError.type, Workspace] =
+    EitherT.fromOptionF(workspaceRepository.findByUuid(workspaceUuid), WorkspaceNotFoundError)
+
+  def deleteWorkspace(workspaceUuid: UUID): EitherT[F, WorkspaceNotFoundError.type, Workspace] =
+    getWorkspace(workspaceUuid).flatMap { ws =>
+      EitherT.liftF(workspaceRepository.deleteByUuid(workspaceUuid)).map(_ => ws)
+    }
 
   def createWorkspace(wsRequest: WorkspaceRequest): Workspace = Workspace(name = wsRequest.name)
 

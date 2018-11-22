@@ -11,11 +11,12 @@ import cf.jrozen.faker.mongo.MongoFs2._
 import com.mongodb.MongoBulkWriteException
 import com.mongodb.async.client.MongoCollection
 import com.mongodb.client.model.Filters
+import com.mongodb.client.result.DeleteResult
 import fs2.Stream
-import io.circe.parser._
 import io.circe.syntax._
 import io.circe.{Decoder, Encoder}
 import org.bson.Document
+import org.bson.conversions.Bson
 import org.bson.types.ObjectId
 
 import scala.collection.JavaConverters._
@@ -23,16 +24,32 @@ import scala.collection.JavaConverters._
 class MongoRepository[F[_] : Async, T](col: MongoCollection[Document])
                                       (implicit cs: ContextShift[F], val decoder: Decoder[T], val encoder: Encoder[T]) {
 
+  implicit class DocumentStreamSyntax(stream: Stream[F, Document]) {
+    def decode: Stream[F, T] = stream.flatMap { doc: Document =>
+      io.circe.parser.decode[T](doc.toJson()) match {
+        case Left(_) => Stream.empty
+        case Right(x) => Stream.emit(x)
+      }
+    }
+  }
+
   def getOne(_id: String): Stream[F, T] = {
+    findBy(Filters.eq("_id", _id))
+  }
+
+  def delete(bsonFilter: Bson): F[DeleteResult] = {
     col
-      .find(Filters.eq("_id", _id))
+      .effect[F]
+      .deleteMany(bsonFilter)
+  }
+
+  def findBy(bsonFilter: Bson, sortBson: Bson = null): Stream[F, T] = {
+    col
+      .find(bsonFilter)
+      .sort(sortBson)
       .stream
-      .flatMap { doc: Document =>
-        decode[T](doc.toJson()) match {
-          case Left(_) => Stream.empty
-          case Right(x) => Stream.emit(x)
-        }
-      }.evalTap(_ => cs.shift)
+      .decode
+      .evalTap(_ => cs.shift)
   }
 
   def saveMany(entities: NonEmptyList[T]): F[Unit] = {

@@ -7,13 +7,12 @@ import io.circe.{Decoder, Encoder}
 
 
 case class Workspace(
-            wsUuid: String = rndUuid(),
-            timestamp: Instant = Instant.now,
+                      wsUuid: String = rndUuid(),
+                      createdAt: Instant = Instant.now,
 
-            name: String,
-
-            endpoints: List[Endpoint] = List()
-          )
+                      name: String,
+                      endpoints: List[Endpoint] = List()
+                    )
 
 object Workspace {
   implicit val encoder: Encoder[Workspace] = deriveEncoder
