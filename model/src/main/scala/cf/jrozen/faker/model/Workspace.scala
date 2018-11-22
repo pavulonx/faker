@@ -6,8 +6,8 @@ import io.circe.generic.semiauto.{deriveDecoder, deriveEncoder}
 import io.circe.{Decoder, Encoder}
 
 
-case class User(
-            userUuid: String = rndUuid(),
+case class Workspace(
+            wsUuid: String = rndUuid(),
             timestamp: Instant = Instant.now,
 
             name: String,
@@ -15,7 +15,7 @@ case class User(
             endpoints: List[Endpoint] = List()
           )
 
-object User {
-  implicit val encoder: Encoder[User] = deriveEncoder
-  implicit val decoder: Decoder[User] = deriveDecoder
+object Workspace {
+  implicit val encoder: Encoder[Workspace] = deriveEncoder
+  implicit val decoder: Decoder[Workspace] = deriveDecoder
 }

@@ -2,10 +2,10 @@ package cf.jrozen.faker.api
 
 import cats.effect._
 import cats.implicits._
-import cf.jrozen.faker.api.users.{UserEndpoints, UserService, UserValidationInterpreter}
+import cf.jrozen.faker.api.workspace.{WorkspaceEndpoints, WorkspaceService, WorkspaceValidationInterpreter}
 import cf.jrozen.faker.mongo.MongoConfig
 import cf.jrozen.faker.mongo.MongoConnection._
-import cf.jrozen.faker.mongo.repository.UsersRepository
+import cf.jrozen.faker.mongo.repository.WorkspaceRepository
 import fs2.Stream
 import org.http4s.HttpApp
 import org.http4s.implicits._
@@ -27,15 +27,15 @@ object ApiApp extends IOApp {
       _ <- Stream.eval(Sync[F].delay(logger.info(s"Config loaded: $configs")))
 
       mongoConnection <- connection[F](MongoConfig.localDefault)
-      usersCol = mongoConnection.faker.users
-      userRepo <- Stream.eval(Sync[F].delay(new UsersRepository[F](usersCol)))
-      userValidation = UserValidationInterpreter[F](userRepo)
+      workpacesCol = mongoConnection.faker.workpaces
+      workpaceRepo <- Stream.eval(Sync[F].delay(new WorkspaceRepository[F](workpacesCol)))
+      workpaceValidation = WorkspaceValidationInterpreter[F](workpaceRepo)
 
-      service = UserService[F](userRepo, userValidation)
-      userEndpoints = UserEndpoints.endpoints[F](service)
+      service = WorkspaceService[F](workpaceRepo, workpaceValidation)
+      workpaceEndpoints = WorkspaceEndpoints.endpoints[F](service)
 
       app = Router {
-        "/api" -> userEndpoints
+        "/api" -> workpaceEndpoints
       }.orNotFound
 
       exitCode <- server(app)

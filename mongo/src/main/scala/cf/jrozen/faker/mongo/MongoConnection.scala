@@ -35,7 +35,7 @@ object MongoConnection {
   }
 
   implicit class MongoDatabaseSyntax(mongoDatabase: MongoDatabase) {
-    def users: MongoCollection[Document] = mongoDatabase.getCollection("users")
+    def workspaces: MongoCollection[Document] = mongoDatabase.getCollection("workspaces")
   }
 
 }
