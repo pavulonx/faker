@@ -1,4 +1,4 @@
-package cf.jrozen.faker.model
+package cf.jrozen.faker.model.domain
 
 import io.circe.generic.semiauto._
 import io.circe.{Decoder, Encoder}

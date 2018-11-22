@@ -2,14 +2,14 @@ package cf.jrozen.faker.handler
 
 import cats.effect.{Sync, Timer}
 import cats.implicits._
-import cf.jrozen.faker.model.{ResponseTemplate => FakerResponse}
+import cf.jrozen.faker.model.domain.ResponseTemplate
 import org.http4s.headers._
 import org.http4s.{EntityEncoder, MediaType, ParseFailure, Response, Status}
 
 
 class ResponseTranslator[F[_]](implicit S: Sync[F], timer: Timer[F]) {
 
-  def apply(fakerRes: FakerResponse): F[Response[F]] = {
+  def apply(fakerRes: ResponseTemplate): F[Response[F]] = {
     timer.sleep(fakerRes.delay) >> S.delay(
       (for {
         ct <- MediaType.parse(fakerRes.contentType).toOption

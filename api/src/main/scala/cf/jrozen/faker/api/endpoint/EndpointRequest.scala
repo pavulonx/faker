@@ -1,6 +1,6 @@
 package cf.jrozen.faker.api.endpoint
 
-import cf.jrozen.faker.model.ResponseTemplate
+import cf.jrozen.faker.model.domain.ResponseTemplate
 import io.circe.generic.semiauto.{deriveDecoder, deriveEncoder}
 import io.circe.{Decoder, Encoder}
 

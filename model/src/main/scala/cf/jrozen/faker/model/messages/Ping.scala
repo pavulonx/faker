@@ -1,4 +1,4 @@
-package cf.jrozen.faker.model
+package cf.jrozen.faker.model.messages
 
 import java.time.Instant
 

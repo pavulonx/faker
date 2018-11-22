@@ -1,17 +1,11 @@
-package cf.jrozen.faker
-
-import java.util.UUID
+package cf.jrozen.faker.model
 
 import io.circe.Decoder.Result
 import io.circe.{Decoder, Encoder, HCursor, Json}
 
 import scala.concurrent.duration.FiniteDuration
 
-package object model {
-
-  type UUID = String
-
-  def rndUuid(): UUID = UUID.randomUUID().toString
+package object domain {
 
   implicit val finiteDurationEncoder: Encoder[FiniteDuration] = new Encoder[FiniteDuration] {
     override def apply(fd: FiniteDuration): Json = Json.fromLong(fd toMillis)

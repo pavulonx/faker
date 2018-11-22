@@ -4,7 +4,7 @@ package cf.jrozen.faker.mongo.repository
 import cats.Functor
 import cats.effect.{Async, ContextShift}
 import cats.implicits._
-import cf.jrozen.faker.model.{UUID, Workspace}
+import cf.jrozen.faker.model.domain.Workspace
 import cf.jrozen.faker.mongo.MongoCirce._
 import cf.jrozen.faker.mongo.MongoFs2._
 import com.mongodb.async.client.MongoCollection
@@ -16,7 +16,7 @@ import org.bson.Document
 
 class WorkspaceRepository[F[_] : Async : Functor](col: MongoCollection[Document])(implicit cs: ContextShift[F]) extends MongoRepository[F, Workspace](col) {
 
-  private val nameFilter = (uuid: UUID) => Filters.eq("wsUuid", uuid)
+  private val nameFilter = (uuid: String) => Filters.eq("wsUuid", uuid)
 
   def findByName(name: String): F[Option[Workspace]] = {
     findBy(nameFilter(name))
@@ -24,7 +24,7 @@ class WorkspaceRepository[F[_] : Async : Functor](col: MongoCollection[Document]
       .last
   }
 
-  def deleteByName(uuid: UUID): F[DeleteResult] = {
+  def deleteByName(uuid: String): F[DeleteResult] = {
     delete(nameFilter(uuid))
   }
 

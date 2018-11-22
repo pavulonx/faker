@@ -4,7 +4,7 @@ import cats.Functor
 import cats.effect.Effect
 import cats.implicits._
 import cf.jrozen.faker.api.{WorkspaceAlreadyExistsError, WorkspaceNotFoundError}
-import cf.jrozen.faker.model.Workspace
+import cf.jrozen.faker.model.domain.Workspace
 import io.circe.syntax._
 import org.http4s.circe._
 import org.http4s.dsl.Http4sDsl

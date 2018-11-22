@@ -2,7 +2,6 @@ package cf.jrozen.faker.api.workspace
 
 import cats.data.EitherT
 import cf.jrozen.faker.api.{WorkspaceAlreadyExistsError, WorkspaceNotFoundError}
-import cf.jrozen.faker.model.UUID
 
 import scala.language.higherKinds
 
@@ -10,5 +9,5 @@ trait WorkspaceValidationAlgebra[F[_]] {
 
   def doesNotExist(workspace: WorkspaceRequest): EitherT[F, WorkspaceAlreadyExistsError, Unit]
 
-  def exists(workspaceUudi: UUID): EitherT[F, WorkspaceNotFoundError.type, Unit]
+  def exists(workspaceName: String): EitherT[F, WorkspaceNotFoundError.type, Unit]
 }

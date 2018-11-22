@@ -3,7 +3,7 @@ package cf.jrozen.faker.api.workspace
 import cats.data.EitherT
 import cats.{Functor, Monad}
 import cf.jrozen.faker.api.{WorkspaceAlreadyExistsError, WorkspaceNotFoundError}
-import cf.jrozen.faker.model.Workspace
+import cf.jrozen.faker.model.domain.Workspace
 import cf.jrozen.faker.mongo.repository.WorkspaceRepository
 
 class WorkspaceService[F[_] : Monad : Functor](workspaceRepository: WorkspaceRepository[F], workspaceValidationAlgebra: WorkspaceValidationAlgebra[F]) {

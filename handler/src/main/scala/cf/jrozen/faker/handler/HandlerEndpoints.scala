@@ -3,7 +3,7 @@ package cf.jrozen.faker.handler
 import cats.Functor
 import cats.effect.{Async, Sync, Timer}
 import cats.implicits._
-import cf.jrozen.faker.model.ResponseTemplate
+import cf.jrozen.faker.model.domain.ResponseTemplate
 import io.circe.syntax._
 import org.http4s.dsl.Http4sDsl
 import org.http4s.{HttpRoutes, Method}
@@ -20,7 +20,7 @@ class HandlerEndpoints[F[_] : Functor : Timer](handlerService: HandlerNotificati
       for {
         result <- RequestTranslator[F].apply(req)
         _ <- S.suspend(handlerService.emit(result.asJson.toString()))
-        response <- ResponseTranslator[F].apply(ResponseTemplate(200, "application/json", result.asJson.toString(), 3 seconds))
+        response <- ResponseTranslator[F].apply(ResponseTemplate(200, "application/json", result.asJson.toString().some, 3 seconds))
       } yield response
   }
 }
