@@ -160,4 +160,11 @@ class MongoCollectionEffect[F[_], A](val underlying: MongoCollection[A]) extends
       underlying.deleteMany(filter, cb.toMongo)
     }
   }
+
+  def replaceOne(filter: Bson, replacement: A)(implicit F: Async[F]): F[DeleteResult] = {
+    Async[F]
+      .async[UpdateResult] { cb =>
+      underlying.replaceOne(filter, replacement, cb.toMongo)
+    }
+  }
 }

@@ -7,10 +7,8 @@ import io.circe.{Decoder, Encoder}
 
 
 case class Workspace(
-                      wsUuid: String = rndUuid(),
-                      createdAt: Instant = Instant.now,
-
                       name: String,
+                      createdAt: Instant = Instant.now,
                       endpoints: List[Endpoint] = List()
                     )
 

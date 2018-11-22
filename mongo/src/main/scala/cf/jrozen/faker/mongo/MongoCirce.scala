@@ -10,6 +10,9 @@ object MongoCirce {
     def toDocument(id: ObjectId): Document =
       Document.parse(underlying.toString)
         .append("_id", id)
+
+    def toDocument: Document =
+      Document.parse(underlying.toString)
   }
 
 }
