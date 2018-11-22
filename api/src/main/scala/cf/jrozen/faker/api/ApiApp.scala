@@ -27,15 +27,15 @@ object ApiApp extends IOApp {
       _ <- Stream.eval(Sync[F].delay(logger.info(s"Config loaded: $configs")))
 
       mongoConnection <- connection[F](MongoConfig.localDefault)
-      workpacesCol = mongoConnection.faker.workpaces
-      workpaceRepo <- Stream.eval(Sync[F].delay(new WorkspaceRepository[F](workpacesCol)))
-      workpaceValidation = WorkspaceValidationInterpreter[F](workpaceRepo)
+      workspacesCol = mongoConnection.faker.workspaces
+      workspaceRepo <- Stream.eval(Sync[F].delay(new WorkspaceRepository[F](workspacesCol)))
+      workspaceValidation = WorkspaceValidationInterpreter[F](workspaceRepo)
 
-      service = WorkspaceService[F](workpaceRepo, workpaceValidation)
-      workpaceEndpoints = WorkspaceEndpoints.endpoints[F](service)
+      service = WorkspaceService[F](workspaceRepo, workspaceValidation)
+      workspaceEndpoints = WorkspaceEndpoints.endpoints[F](service)
 
       app = Router {
-        "/api" -> workpaceEndpoints
+        "/api" -> workspaceEndpoints
       }.orNotFound
 
       exitCode <- server(app)
