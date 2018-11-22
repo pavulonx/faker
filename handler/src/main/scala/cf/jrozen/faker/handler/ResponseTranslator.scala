@@ -14,7 +14,7 @@ class ResponseTranslator[F[_]](implicit S: Sync[F], timer: Timer[F]) {
       (for {
         ct <- MediaType.parse(fakerRes.contentType).toOption
         sc <- (Status.fromInt(fakerRes.code): Either[ParseFailure, Status]).toOption
-      } yield Response[F](sc).withEntity[String](fakerRes.body)(EntityEncoder.stringEncoder).withHeaders(`Content-Type`(ct))
+      } yield Response[F](sc).withEntity[String](fakerRes.body.getOrElse(""))(EntityEncoder.stringEncoder).withHeaders(`Content-Type`(ct))
         ).getOrElse[Response[F]](Response[F](Status.InternalServerError))
     )
   }

@@ -27,7 +27,7 @@ case class ResponseTemplate(
                              code: Int,
                              contentType: String,
                              //                             headers: Map[String, String],
-                             body: String,
+                             body: Option[String],
                              delay: FiniteDuration
                            )
 

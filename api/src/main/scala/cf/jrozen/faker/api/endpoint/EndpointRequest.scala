@@ -1,11 +1,11 @@
-package cf.jrozen.faker.api.endpoints
+package cf.jrozen.faker.api.endpoint
 
 import cf.jrozen.faker.model.ResponseTemplate
 import io.circe.generic.semiauto.{deriveDecoder, deriveEncoder}
 import io.circe.{Decoder, Encoder}
 
 case class EndpointRequest(
-                            clientId: String,
+                            workspaceId: String,
 
                             name: String,
                             description: String,
