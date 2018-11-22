@@ -1,5 +1,6 @@
 package cf.jrozen.faker.mongo.repository
 
+import cats.Functor
 import cats.effect.{Async, ContextShift}
 import cf.jrozen.faker.model.User
 import cf.jrozen.faker.mongo.MongoFs2._
@@ -10,9 +11,9 @@ import io.circe.parser.decode
 import org.bson.Document
 
 
-class UserRepository[F[_] : Async](col: MongoCollection[Document])(implicit cs: ContextShift[F]) extends MongoRepository[F, User](col) {
+class UsersRepository[F[_] : Async : Functor](col: MongoCollection[Document])(implicit cs: ContextShift[F]) extends MongoRepository[F, User](col) {
 
-  def getByName(name: String): Stream[F, User] = {
+  def findByName(name: String): F[Option[User]] = {
     col
       .find(Filters.eq("name", name))
       .sort(Sorts.descending("timestamp"))
@@ -24,8 +25,14 @@ class UserRepository[F[_] : Async](col: MongoCollection[Document])(implicit cs: 
           case Right(x) => Stream.emit(x)
         }
       }.evalTap(_ => cs.shift)
+      .compile
+      .last
   }
 
 }
 
+object UsersRepository {
+  def apply[F[_] : Async : ContextShift](col: MongoCollection[Document]): UsersRepository[F] =
+    new UsersRepository[F](col)
+}
 

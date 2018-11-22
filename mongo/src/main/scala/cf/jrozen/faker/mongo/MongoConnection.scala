@@ -1,20 +1,20 @@
 package cf.jrozen.faker.mongo
 
-import cats.effect.{IO, Resource, Sync}
+import cats.effect.{Resource, Sync}
 import com.mongodb.MongoClientSettings
-import com.mongodb.async.client.{MongoClient, MongoClients}
+import com.mongodb.async.client.{MongoClient, MongoClients, MongoCollection, MongoDatabase}
 import fs2._
 import org.bson.Document
 
 object MongoConnection {
 
-//  val allDocuments: Stream[IO, Document] =
-//    for {
-//      conn: MongoClient <- connection[IO](MongoConfig.localDefault)
-//      database = conn.getDatabase("test_db")
-//      collection = database.getCollection("test_collection")
-//      document <- collection.find().stream[IO]
-//    } yield document
+  //  val allDocuments: Stream[IO, Document] =
+  //    for {
+  //      conn: MongoClient <- connection[IO](MongoConfig.localDefault)
+  //      database = conn.getDatabase("test_db")
+  //      collection = database.getCollection("test_collection")
+  //      document <- collection.find().stream[IO]
+  //    } yield document
 
   def connection[F[_] : Sync](mongoInfo: MongoConfig): Stream[F, MongoClient] =
     Stream.resource(fromUrl[F](mongoInfo.url))
@@ -28,6 +28,14 @@ object MongoConnection {
     implicit F: Sync[F]): Resource[F, MongoClient] = {
     Resource.make(F.delay(MongoClients.create(settings)))(client =>
       F.delay(client.close()))
+  }
+
+  implicit class MongoConnectionSyntax(mongoClient: MongoClient) {
+    def faker: MongoDatabase = mongoClient.getDatabase("faker")
+  }
+
+  implicit class MongoDatabaseSyntax(mongoDatabase: MongoDatabase) {
+    def users: MongoCollection[Document] = mongoDatabase.getCollection("users")
   }
 
 }

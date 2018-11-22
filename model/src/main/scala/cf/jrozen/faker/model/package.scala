@@ -1,5 +1,7 @@
 package cf.jrozen.faker
 
+import java.util.UUID
+
 import io.circe.Decoder.Result
 import io.circe.{Decoder, Encoder, HCursor, Json}
 
@@ -18,4 +20,5 @@ package object model {
     override def apply(c: HCursor): Result[FiniteDuration] = Decoder.decodeLong(c).map(_ milliseconds)
   }
 
+  def rndUuid(): String = UUID.randomUUID().toString
 }

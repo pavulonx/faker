@@ -7,12 +7,12 @@ import io.circe.{Decoder, Encoder}
 
 
 case class User(
-            userUuid: String,
-            timestamp: Instant,
+            userUuid: String = rndUuid(),
+            timestamp: Instant = Instant.now,
 
             name: String,
 
-            endpoints: List[Endpoint]
+            endpoints: List[Endpoint] = List()
           )
 
 object User {

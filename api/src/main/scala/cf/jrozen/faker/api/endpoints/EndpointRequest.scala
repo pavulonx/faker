@@ -1,4 +1,4 @@
-package cf.jrozen.faker.api.dto
+package cf.jrozen.faker.api.endpoints
 
 import cf.jrozen.faker.model.ResponseTemplate
 import io.circe.generic.semiauto.{deriveDecoder, deriveEncoder}

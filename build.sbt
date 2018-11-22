@@ -25,7 +25,6 @@ shellPrompt := { s => Project.extract(s).currentProject.id + " > " }
 lazy val commonSettings = Seq(
   scalacOptions ++= commonScalacOptions(scalaVersion.value)
 )
-
 lazy val testDependencies = Seq(
   "org.specs2" %% "specs2-core" % Specs2Version % "test"
 )
@@ -33,6 +32,9 @@ lazy val circeDependencies = Seq(
   "io.circe" %% "circe-core" % CirceVersion,
   "io.circe" %% "circe-generic" % CirceVersion,
   "io.circe" %% "circe-parser" % CirceVersion
+)
+lazy val pureconfigDependencies = Seq(
+  "com.github.pureconfig" %% "pureconfig" % PureConfigVersion
 )
 
 lazy val http4sDependencies = Seq(
@@ -70,6 +72,7 @@ lazy val api = (project in file("api"))
       "ch.qos.logback" % "logback-classic" % LogbackVersion
     ) ++ http4sDependencies
       ++ circeDependencies
+      ++ pureconfigDependencies
       ++ testDependencies
   ).dependsOn(model, kafka, mongo)
 
@@ -78,9 +81,9 @@ lazy val handler = (project in file("handler"))
   .settings(commonSettings)
   .settings(
     libraryDependencies ++= Seq(
-      "com.github.pureconfig" %% "pureconfig" % PureConfigVersion,
       "ch.qos.logback" % "logback-classic" % LogbackVersion
     ) ++ http4sDependencies
+      ++ pureconfigDependencies
       ++ circeDependencies
       ++ testDependencies
   ).dependsOn(model, kafka, mongo)
