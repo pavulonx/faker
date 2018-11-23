@@ -4,6 +4,8 @@ package cf.jrozen.faker.mongo
   copied from https://github.com/fiadliel/fs2-mongodb/blob/master/src/main/scala/org/lyranthe/fs2_mongodb/imports.scala
  */
 
+import java.util.{List => JList}
+
 import cats.effect.Async
 import cats.implicits._
 import com.mongodb.async.client.{MongoCollection, MongoIterable}
@@ -12,11 +14,17 @@ import com.mongodb.bulk.BulkWriteResult
 import com.mongodb.client.model.WriteModel
 import com.mongodb.client.result.{DeleteResult, UpdateResult}
 import fs2._
+import org.bson.Document
 import org.bson.conversions.Bson
 
 import scala.collection.JavaConverters._
 
 object MongoFs2 {
+
+  def arrayAsStream[F[_]](field: String)(document: Document): Stream[F, Document] =
+    Option(document.get("endpoints", classOf[JList[Document]])).map(endpints =>
+      Stream[F, Document](endpints.toArray(Array.empty[Document]): _*)
+    ).getOrElse(Stream.empty[F])
 
   private[MongoFs2] implicit class AsyncToMongoOpt[A](val cb: Either[Throwable, Option[A]] => Unit)
     extends AnyVal {

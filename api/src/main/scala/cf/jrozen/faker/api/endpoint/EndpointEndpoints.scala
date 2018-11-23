@@ -14,6 +14,10 @@ class EndpointEndpoints[F[_] : Sync] extends Http4sDsl[F] {
   implicit val endpointRequestDecoder: EntityDecoder[F, EndpointRequest] = jsonOf[F, EndpointRequest]
 
   private def getEndpoint(service: EndpointService[F]): HttpRoutes[F] = HttpRoutes.of[F] {
+    case GET -> Root / "endpoint" / workspaceName =>
+      service.getEndpoints(workspaceName) >>= {
+        endpoints => Ok(endpoints.asJson)
+      }
     case GET -> Root / "endpoint" / workspaceName / endpointId =>
       service.getEndpoint(workspaceName, endpointId).value >>= {
         case Right(u: Endpoint) => Ok(u.asJson)

@@ -1,6 +1,7 @@
 package cf.jrozen.faker.mongo
 
-import io.circe.Json
+import io.circe.syntax._
+import io.circe.{Encoder, Json}
 import org.bson.Document
 import org.bson.types.ObjectId
 
@@ -10,9 +11,11 @@ object MongoCirce {
     def toDocument(id: ObjectId): Document =
       Document.parse(underlying.toString)
         .append("_id", id)
+  }
 
-    def toDocument: Document =
-      Document.parse(underlying.toString)
+  implicit class EntityMongoSyntax[T: Encoder](underlying: T) {
+    def asDocument: Document =
+      Document.parse(underlying.asJson.toString)
   }
 
 }

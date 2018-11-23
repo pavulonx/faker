@@ -39,10 +39,10 @@ private[mongo] class MongoRepository[F[_] : Async, T](col: MongoCollection[Docum
       .deleteMany(filter)
   }
 
-  def findBy(filter: Bson, sortBson: Bson = null, projection: Bson = null): Stream[F, T] = {
+  def findBy(filter: Bson, sort: Bson = null, projection: Bson = null): Stream[F, T] = {
     col
       .find(filter)
-      .sort(sortBson)
+      .sort(sort)
       .projection(projection)
       .stream
       .decode

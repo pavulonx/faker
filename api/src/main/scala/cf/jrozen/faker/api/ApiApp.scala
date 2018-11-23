@@ -2,10 +2,11 @@ package cf.jrozen.faker.api
 
 import cats.effect._
 import cats.implicits._
+import cf.jrozen.faker.api.endpoint.{EndpointEndpoints, EndpointService}
 import cf.jrozen.faker.api.workspace.{WorkspaceEndpoints, WorkspaceService, WorkspaceValidationInterpreter}
 import cf.jrozen.faker.mongo.MongoConfig
 import cf.jrozen.faker.mongo.MongoConnection._
-import cf.jrozen.faker.mongo.repository.WorkspaceRepository
+import cf.jrozen.faker.mongo.repository.{EndpointRepository, WorkspaceRepository}
 import fs2.Stream
 import org.http4s.HttpApp
 import org.http4s.implicits._
@@ -28,14 +29,18 @@ object ApiApp extends IOApp {
 
       mongoConnection <- connection[F](MongoConfig.localDefault)
       workspacesCol = mongoConnection.faker.workspaces
-      workspaceRepo <- Stream.eval(Sync[F].delay(new WorkspaceRepository[F](workspacesCol)))
-      workspaceValidation = WorkspaceValidationInterpreter[F](workspaceRepo)
 
-      service = WorkspaceService[F](workspaceRepo, workspaceValidation)
-      workspaceEndpoints = WorkspaceEndpoints.endpoints[F](service)
+      workspaceRepo <- Stream.eval(Sync[F].delay(WorkspaceRepository[F](workspacesCol)))
+      workspaceValidation = WorkspaceValidationInterpreter[F](workspaceRepo)
+      workspaceService = WorkspaceService[F](workspaceRepo, workspaceValidation)
+      workspaceEndpoints = WorkspaceEndpoints.endpoints[F](workspaceService)
+
+      endpointRepo <- Stream.eval(Sync[F].delay(EndpointRepository[F](workspacesCol)))
+      endpointService = EndpointService[F](endpointRepo)
+      endpointEndpoints = EndpointEndpoints.endpoints[F](endpointService)
 
       app = Router {
-        "/api" -> workspaceEndpoints
+        "/api" -> (workspaceEndpoints <+> endpointEndpoints)
       }.orNotFound
 
       exitCode <- server(app)
