@@ -11,7 +11,7 @@ import org.http4s.websocket.WebSocketFrame.Text
 
 class NotifierService[F[_] : ConcurrentEffect : ContextShift : Timer](val kafkaServerInfo: KafkaServerInfo) {
 
-  def subscribe(clientId: String): Stream[F, WebSocketFrame] = {
+  def subscribe(clientId: String): Stream[F, WebSocketFrame] = {  //todo: one consumer per app
 
     val consumerSettings = KafkaConfiguration.consumerSettings[String](s"notifier_$clientId", kafkaServerInfo)
     (for {

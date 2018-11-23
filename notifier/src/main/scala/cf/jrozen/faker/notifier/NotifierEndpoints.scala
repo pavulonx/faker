@@ -1,24 +1,25 @@
 package cf.jrozen.faker.notifier
 
-import cats.data.Kleisli
-import cats.effect.{ConcurrentEffect, Effect, Sync, Timer}
+import cats.effect.{ConcurrentEffect, Timer}
 import cats.implicits._
+import cf.jrozen.faker.model.messages.Ping
 import fs2.concurrent.Queue
 import fs2.{Pipe, Sink, Stream}
+import io.circe.syntax._
+import org.http4s.HttpRoutes
 import org.http4s.dsl.Http4sDsl
 import org.http4s.server.websocket.WebSocketBuilder
 import org.http4s.websocket.WebSocketFrame
-import org.http4s.websocket.WebSocketFrame.{Close, Text}
-import org.http4s.{HttpApp, HttpRoutes, Response}
+import org.http4s.websocket.WebSocketFrame.Text
 
 import scala.concurrent.duration._
 
-class NotifierEndpoints[F[_] : Effect](implicit F: ConcurrentEffect[F], timer: Timer[F]) extends Http4sDsl[F] {
+class NotifierEndpoints[F[_] : Timer](implicit F: ConcurrentEffect[F]) extends Http4sDsl[F] {
 
   private def pingStream(interval: FiniteDuration = 10 seconds): Stream[F, Text] =
-    Stream.awakeEvery[F](interval).map(d => Text(s"Ping! $d"))
+    Stream.awakeEvery[F](interval).map(_ => Text(Ping("ping").asJson.toString))
 
-  def serviceInfo(): HttpRoutes[F] = HttpRoutes.of[F] {
+  def serviceInfo(): HttpRoutes[F] = HttpRoutes.of[F] { //todo: move to commons
     case GET -> Root / "info" =>
       Ok("faker-notifier")
 
@@ -28,7 +29,6 @@ class NotifierEndpoints[F[_] : Effect](implicit F: ConcurrentEffect[F], timer: T
 
   def wsDiagnostics(): HttpRoutes[F] = HttpRoutes.of[F] {
     case GET -> Root / "ping" =>
-
       val toClient: Stream[F, WebSocketFrame] = pingStream(1 second)
       val fromClient: Sink[F, WebSocketFrame] = _.evalMap {
         case Text(t, _) => F.delay(println(t))
@@ -36,9 +36,7 @@ class NotifierEndpoints[F[_] : Effect](implicit F: ConcurrentEffect[F], timer: T
       }
       WebSocketBuilder[F].build(toClient, fromClient)
 
-
     case GET -> Root / "wsecho" =>
-
       val echoReply: Pipe[F, WebSocketFrame, WebSocketFrame] =
         _.collect {
           case Text(msg, _) => Text("Echo: " + msg)
@@ -56,11 +54,7 @@ class NotifierEndpoints[F[_] : Effect](implicit F: ConcurrentEffect[F], timer: T
   def serviceEndpoint(notifierService: NotifierService[F]): HttpRoutes[F] = HttpRoutes.of[F] {
     case GET -> Root / "notifications" / clientId =>
       val toClient: Stream[F, WebSocketFrame] = notifierService.subscribe(clientId) merge pingStream()
-      val fromClient: Sink[F, WebSocketFrame] = _.evalMap { // todo: commit msg - now autocommit
-        case Text(t: String, _) => F.delay(println(s"Client msg: " + t))
-        case Close(_) => F.delay(println(s"Client $clientId connection close"))
-        case _ => F.delay(())
-      }
+      val fromClient: Sink[F, WebSocketFrame] = _ => Stream.empty
       WebSocketBuilder[F].build(toClient, fromClient)
 
   }
@@ -72,14 +66,9 @@ class NotifierEndpoints[F[_] : Effect](implicit F: ConcurrentEffect[F], timer: T
 
 object NotifierEndpoints {
 
-  def endpoints[F[_] : Effect](notifierService: NotifierService[F])
-                              (implicit F: ConcurrentEffect[F], timer: Timer[F]): HttpRoutes[F] = {
-
+  def endpoints[F[_]](notifierService: NotifierService[F])
+                     (implicit F: ConcurrentEffect[F], timer: Timer[F]): HttpRoutes[F] = {
     new NotifierEndpoints[F].endpoints(notifierService)
   }
 
-  def app[F[_] : Effect](notifierService: NotifierService[F])
-                        (implicit S: Sync[F], F: ConcurrentEffect[F], timer: Timer[F]): HttpApp[F] = {
-    Kleisli(a => endpoints(notifierService).run(a).getOrElse(Response.notFound))
-  }
 }
