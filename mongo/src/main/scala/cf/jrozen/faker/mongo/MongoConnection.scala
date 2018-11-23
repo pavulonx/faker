@@ -8,14 +8,6 @@ import org.bson.Document
 
 object MongoConnection {
 
-  //  val allDocuments: Stream[IO, Document] =
-  //    for {
-  //      conn: MongoClient <- connection[IO](MongoConfig.localDefault)
-  //      database = conn.getDatabase("test_db")
-  //      collection = database.getCollection("test_collection")
-  //      document <- collection.find().stream[IO]
-  //    } yield document
-
   def connection[F[_] : Sync](mongoInfo: MongoConfig): Stream[F, MongoClient] =
     Stream.resource(fromUrl[F](mongoInfo.url))
 
