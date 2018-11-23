@@ -10,7 +10,8 @@ import com.mongodb.client.result.DeleteResult
 import org.bson.Document
 
 
-class WorkspaceRepository[F[_] : Async : Functor](col: MongoCollection[Document])(implicit cs: ContextShift[F]) extends MongoRepository[F, Workspace](col) {
+class WorkspaceRepository[F[_] : Async : Functor](col: MongoCollection[Document])
+                                                 (implicit cs: ContextShift[F]) extends MongoRepository[F, Workspace](col) {
 
   def findByName(name: String): F[Option[Workspace]] = {
     col

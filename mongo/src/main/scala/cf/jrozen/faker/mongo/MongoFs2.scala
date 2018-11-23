@@ -22,7 +22,7 @@ import scala.collection.JavaConverters._
 object MongoFs2 {
 
   def arrayAsStream[F[_]](field: String)(document: Document): Stream[F, Document] =
-    Option(document.get("endpoints", classOf[JList[Document]])).map(endpints =>
+    Option(document.get(field, classOf[JList[Document]])).map(endpints =>
       Stream[F, Document](endpints.toArray(Array.empty[Document]): _*)
     ).getOrElse(Stream.empty[F])
 

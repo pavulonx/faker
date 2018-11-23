@@ -8,7 +8,7 @@ import io.circe.{Decoder, Encoder}
 import scala.concurrent.duration.FiniteDuration
 
 case class Endpoint(
-                     endpointUuid: String,
+                     endpointId: String,
 
                      createdAt: Instant,
 

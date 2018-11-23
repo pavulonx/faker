@@ -24,7 +24,7 @@ import scala.collection.JavaConverters._
 private[mongo] class MongoRepository[F[_] : Async, T](col: MongoCollection[Document])
                                                      (implicit cs: ContextShift[F], val decoder: Decoder[T], val encoder: Encoder[T]) {
 
-  implicit class DocumentStreamSyntax(stream: Stream[F, Document]) {
+  implicit class DocumentStreamSyntax(stream: Stream[F, Document]) { // TODO: can we use FunctorFilter??
     def decode: Stream[F, T] = stream.flatMap { doc: Document =>
       io.circe.parser.decode[T](doc.toJson()) match {
         case Left(_) => Stream.empty
@@ -37,16 +37,6 @@ private[mongo] class MongoRepository[F[_] : Async, T](col: MongoCollection[Docum
     col
       .effect[F]
       .deleteMany(filter)
-  }
-
-  def findBy(filter: Bson, sort: Bson = null, projection: Bson = null): Stream[F, T] = {
-    col
-      .find(filter)
-      .sort(sort)
-      .projection(projection)
-      .stream
-      .decode
-      .evalTap(_ => cs.shift)
   }
 
   def saveMany(entities: NonEmptyList[T]): F[Unit] = {

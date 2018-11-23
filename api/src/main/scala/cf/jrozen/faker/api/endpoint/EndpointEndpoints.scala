@@ -34,7 +34,7 @@ class EndpointEndpoints[F[_] : Sync] extends Http4sDsl[F] {
   }
 
   private def deleteEndpoint(service: EndpointService[F]): HttpRoutes[F] = HttpRoutes.of[F] {
-    case req@DELETE -> Root / "endpoint" / workspaceName / endpointId =>
+    case DELETE -> Root / "endpoint" / workspaceName / endpointId =>
       service.deleteEndpoint(workspaceName, endpointId).value >>= {
         case Right(endpoint: Endpoint) => Ok(endpoint.asJson)
         case Left(EndpointNotFoundError(_)) => NotFound()
@@ -42,7 +42,7 @@ class EndpointEndpoints[F[_] : Sync] extends Http4sDsl[F] {
   }
 
   private def `disable/enableEndpoint`(service: EndpointService[F]): HttpRoutes[F] = HttpRoutes.of[F] {
-    case req@PUT -> Root / "endpoint" / workspaceName / endpointId => ???
+    case PUT -> Root / "endpoint" / workspaceName / endpointId => ???
   }
 
   def endpoints(service: EndpointService[F]): HttpRoutes[F] = {
@@ -52,6 +52,6 @@ class EndpointEndpoints[F[_] : Sync] extends Http4sDsl[F] {
 }
 
 object EndpointEndpoints {
-  def endpoints[F[_] : Effect](service: EndpointService[F]): HttpRoutes[F] =
+  def endpoints[F[_] : Sync](service: EndpointService[F]): HttpRoutes[F] =
     new EndpointEndpoints[F]().endpoints(service)
 }

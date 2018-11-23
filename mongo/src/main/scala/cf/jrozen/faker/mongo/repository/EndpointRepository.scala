@@ -14,7 +14,7 @@ import org.bson.Document
 class EndpointRepository[F[_] : Async : Functor](col: MongoCollection[Document])
                                                 (implicit cs: ContextShift[F]) extends MongoRepository[F, Endpoint](col) {
 
-  def findEndpoints(workspaceName: String) = {
+  def findEndpoints(workspaceName: String): F[List[Endpoint]] = {
     col
       .find(workspaceNameFilter(workspaceName))
       .projection(Projections.include("endpoints"))
@@ -29,7 +29,7 @@ class EndpointRepository[F[_] : Async : Functor](col: MongoCollection[Document])
   def findEndpoint(workspaceName: String, endpointId: String): F[Option[Endpoint]] = {
     col
       .find(workspaceNameFilter(workspaceName))
-      .projection(Projections.elemMatch("endpoints", Filters.eq("endpointUuid", endpointId)))
+      .projection(Projections.elemMatch("endpoints", Filters.eq("endpointId", endpointId)))
       .stream
       .flatMap(arrayAsStream("endpoints"))
       .decode
