@@ -9,5 +9,5 @@ trait WorkspaceValidationAlgebra[F[_]] {
 
   def doesNotExist(workspace: WorkspaceRequest): EitherT[F, WorkspaceAlreadyExistsError, Unit]
 
-  def exists(workspaceName: String): EitherT[F, WorkspaceNotFoundError.type, Unit]
+  def exists(workspaceName: String): EitherT[F, WorkspaceNotFoundError, Unit]
 }

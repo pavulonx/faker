@@ -5,8 +5,6 @@ import io.circe.generic.semiauto.{deriveDecoder, deriveEncoder}
 import io.circe.{Decoder, Encoder}
 
 case class EndpointRequest(
-                            workspaceId: String,
-
                             name: String,
                             description: String,
 

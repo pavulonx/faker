@@ -15,9 +15,9 @@ class WorkspaceValidationInterpreter[F[_] : Monad](workspaceRepo: WorkspaceRepos
     }
   }
 
-  def exists(workspaceName: String): EitherT[F, WorkspaceNotFoundError.type, Unit] = EitherT {
+  def exists(workspaceName: String): EitherT[F, WorkspaceNotFoundError, Unit] = EitherT {
     workspaceRepo.findByName(workspaceName) map {
-      case None => Left(WorkspaceNotFoundError)
+      case None => Left(WorkspaceNotFoundError(workspaceName))
       case Some(_) => Right(())
     }
   }

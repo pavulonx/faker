@@ -9,6 +9,7 @@ import scala.concurrent.duration.FiniteDuration
 
 case class Endpoint(
                      endpointUuid: String,
+
                      createdAt: Instant,
 
                      name: String,

@@ -15,10 +15,10 @@ class WorkspaceService[F[_] : Monad : Functor](workspaceRepository: WorkspaceRep
     }
   }
 
-  def getWorkspace(workspaceName: String): EitherT[F, WorkspaceNotFoundError.type, Workspace] =
-    EitherT.fromOptionF(workspaceRepository.findByName(workspaceName), WorkspaceNotFoundError)
+  def getWorkspace(workspaceName: String): EitherT[F, WorkspaceNotFoundError, Workspace] =
+    EitherT.fromOptionF(workspaceRepository.findByName(workspaceName), WorkspaceNotFoundError(workspaceName))
 
-  def deleteWorkspace(workspaceName: String): EitherT[F, WorkspaceNotFoundError.type, Workspace] =
+  def deleteWorkspace(workspaceName: String): EitherT[F, WorkspaceNotFoundError, Workspace] =
     getWorkspace(workspaceName).flatMap { ws =>
       EitherT.liftF(workspaceRepository.deleteByName(workspaceName)).map(_ => ws)
     }

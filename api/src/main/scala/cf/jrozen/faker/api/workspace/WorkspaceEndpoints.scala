@@ -14,15 +14,15 @@ class WorkspaceEndpoints[F[_] : Effect : Functor] extends Http4sDsl[F] {
 
   implicit val workspaceRequestDecoder: EntityDecoder[F, WorkspaceRequest] = jsonOf[F, WorkspaceRequest]
 
-  def getWorkspaceEndpoint(workspaceService: WorkspaceService[F]): HttpRoutes[F] = HttpRoutes.of[F] {
+  private def getWorkspace(workspaceService: WorkspaceService[F]): HttpRoutes[F] = HttpRoutes.of[F] {
     case GET -> Root / "workspace" / workspaceId =>
       workspaceService.getWorkspace(workspaceId).value >>= {
         case Right(u: Workspace) => Ok(u.asJson)
-        case Left(WorkspaceNotFoundError) => NotFound()
+        case Left(WorkspaceNotFoundError(_)) => NotFound()
       }
   }
 
-  def addWorkspaceEndpoint(workspaceService: WorkspaceService[F]): HttpRoutes[F] = HttpRoutes.of[F] {
+  private def addWorkspace(workspaceService: WorkspaceService[F]): HttpRoutes[F] = HttpRoutes.of[F] {
     case req@POST -> Root / "workspace" =>
       req.as[WorkspaceRequest] >>= {
         workspaceRequest => workspaceService.addWorkspace(workspaceRequest).value
@@ -32,16 +32,16 @@ class WorkspaceEndpoints[F[_] : Effect : Functor] extends Http4sDsl[F] {
       }
   }
 
-  def deleteWorkspaceEndpoint(workspaceService: WorkspaceService[F]): HttpRoutes[F] = HttpRoutes.of[F] {
+  private def deleteWorkspace(workspaceService: WorkspaceService[F]): HttpRoutes[F] = HttpRoutes.of[F] {
     case DELETE -> Root / "workspace" / workspaceId =>
       workspaceService.deleteWorkspace(workspaceId).value >>= {
         case Right(u: Workspace) => Ok(u.asJson)
-        case Left(WorkspaceNotFoundError) => NotFound()
+        case Left(WorkspaceNotFoundError(_)) => NotFound()
       }
   }
 
   def endpoints(workspaceService: WorkspaceService[F]): HttpRoutes[F] =
-    getWorkspaceEndpoint(workspaceService) <+> addWorkspaceEndpoint(workspaceService)
+    getWorkspace(workspaceService) <+> addWorkspace(workspaceService) <+> deleteWorkspace(workspaceService)
 
 }
 

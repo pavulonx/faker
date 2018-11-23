@@ -21,8 +21,8 @@ import org.bson.types.ObjectId
 
 import scala.collection.JavaConverters._
 
-class MongoRepository[F[_] : Async, T](col: MongoCollection[Document])
-                                      (implicit cs: ContextShift[F], val decoder: Decoder[T], val encoder: Encoder[T]) {
+private[mongo] class MongoRepository[F[_] : Async, T](col: MongoCollection[Document])
+                                                     (implicit cs: ContextShift[F], val decoder: Decoder[T], val encoder: Encoder[T]) {
 
   implicit class DocumentStreamSyntax(stream: Stream[F, Document]) {
     def decode: Stream[F, T] = stream.flatMap { doc: Document =>
@@ -33,20 +33,17 @@ class MongoRepository[F[_] : Async, T](col: MongoCollection[Document])
     }
   }
 
-  def getOne(_id: String): Stream[F, T] = {
-    findBy(Filters.eq("_id", _id))
-  }
-
-  def delete(bsonFilter: Bson): F[DeleteResult] = {
+  def delete(filter: Bson): F[DeleteResult] = {
     col
       .effect[F]
-      .deleteMany(bsonFilter)
+      .deleteMany(filter)
   }
 
-  def findBy(bsonFilter: Bson, sortBson: Bson = null): Stream[F, T] = {
+  def findBy(filter: Bson, sortBson: Bson = null, projection: Bson = null): Stream[F, T] = {
     col
-      .find(bsonFilter)
+      .find(filter)
       .sort(sortBson)
+      .projection(projection)
       .stream
       .decode
       .evalTap(_ => cs.shift)
