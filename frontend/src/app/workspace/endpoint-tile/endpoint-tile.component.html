@@ -1,4 +1,5 @@
-<div class="list-group-item list-group-item-action flex-column align-items-start">
+<div class="list-group-item list-group-item-action flex-column align-items-start"
+     [ngClass]="enabled ?'list-group-item-primary':'' ">
   <div class="d-flex w-100 justify-content-between">
     <h5 class="mb-1">{{endpoint?.name}} <span *ngIf="unseenEvents()" class="badge badge-secondary">New</span></h5>
     <small>{{endpointCreationDate() | date}}</small>

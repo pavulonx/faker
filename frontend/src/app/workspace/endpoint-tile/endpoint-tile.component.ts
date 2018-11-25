@@ -10,6 +10,9 @@ export class EndpointTileComponent implements OnInit {
   @Input()
   endpoint: Endpoint;
 
+  @Input()
+  enabled: boolean;
+
   constructor() {
   }
 

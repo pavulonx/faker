@@ -4,7 +4,7 @@ import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {EndpointModalComponent} from './endpoint-modal/endpoint-modal.component';
 import {ApiService} from '../api.service';
 import {flatMap, map} from 'rxjs/operators';
-import {ActivatedRoute} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 
 @Component({
   selector: 'app-workspace',
@@ -15,7 +15,7 @@ export class WorkspaceComponent implements OnInit {
 
   private workspace: Workspace;
 
-  constructor(private api: ApiService, private ws: WebsocketService, private modalService: NgbModal, private route: ActivatedRoute) {
+  constructor(private api: ApiService, private ws: WebsocketService, private modalService: NgbModal, private route: ActivatedRoute, private router: Router) {
     ws.getUpdates$.subscribe(e => console.log(e));
   }
 
@@ -37,4 +37,7 @@ export class WorkspaceComponent implements OnInit {
     });
   }
 
+  tileEnabled(endpointId: string) {
+    return this.router.url.includes(endpointId);
+  }
 }
