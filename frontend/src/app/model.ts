@@ -1,7 +1,14 @@
+interface Workspace {
+  name: String,
+  createdAt: Date,
+  endpoints: Endpoint[]
+}
+
 interface Endpoint {
-  uuid?: string,
-  name?: string,
-  desc?: string,
+  endpointId?: String,
+  createdAt?: Date,
+  name?: String,
+  description?: String,
   response: ResponseTemplate,
 }
 

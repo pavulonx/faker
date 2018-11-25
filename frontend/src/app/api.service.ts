@@ -10,12 +10,16 @@ export class ApiService {
   constructor(private http: HttpClient) {
   }
 
-  getEndpoint(endpointUuid: string): Observable<Endpoint> {
-    return this.http.get<Endpoint>('endpoint/' + endpointUuid);
+  getEndpoint(workspaceName: string, endpointUuid: string): Observable<Endpoint> {
+    return this.http.get<Endpoint>('api/endpoint/' + workspaceName + '/' + endpointUuid);
   }
 
-  getEndpoints(): Observable<Endpoint[]> {
-    return this.http.get<Endpoint[]>('endpoint/');
+  getEndpoints(workspaceName: string): Observable<Endpoint[]> {
+    return this.http.get<Endpoint[]>('api/endpoint/' + workspaceName);
+  }
+
+  getWorkspace(workspaceName: string): Observable<Workspace> {
+    return this.http.get<Workspace>('api/workspace/' + workspaceName);
   }
 
 }

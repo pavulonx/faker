@@ -12,6 +12,7 @@ import org.http4s.HttpApp
 import org.http4s.implicits._
 import org.http4s.server.Router
 import org.http4s.server.blaze.BlazeServerBuilder
+import org.http4s.server.middleware.CORS
 import org.log4s.getLogger
 
 object ApiApp extends IOApp {
@@ -39,9 +40,10 @@ object ApiApp extends IOApp {
       endpointService = EndpointService[F](endpointRepo)
       endpointEndpoints = EndpointEndpoints.endpoints[F](endpointService)
 
-      app = Router {
+      app = CORS(Router {
         "/api" -> (workspaceEndpoints <+> endpointEndpoints)
-      }.orNotFound
+      })
+        .orNotFound
 
       exitCode <- server(app)
     } yield exitCode

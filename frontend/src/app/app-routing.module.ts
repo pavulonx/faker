@@ -8,14 +8,10 @@ const routes: Routes = [
   {
     path: '', redirectTo: '/workspace', pathMatch: 'full'
   }, {
-    path: 'workspace',
+    path: 'workspace/:workspaceName',
     component: WorkspaceComponent,// pathMatch: 'full',
     children: [
-      // {path: '', component: EndpointDetailsComponent},
-      {path: ':endpointUuid', component: EndpointDetailsComponent},
-      // {path: 'uuid4', component: EndpointDetailsComponent},
-      // {path: 'medium', component: MediumBlueComponent},
-      // {path: 'dark', component: DarkBlueComponent}
+      {path: ':endpointId', component: EndpointDetailsComponent},
     ]
   }, {
     path: 'about',

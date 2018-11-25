@@ -11,6 +11,7 @@ export class HostProviderInterceptor implements HttpInterceptor {
     req = req.clone({
       url: this.serviceAddress(req.url)
     });
+    console.debug("Api call: " + JSON.stringify(req));
     return next.handle(req);
   }
 
@@ -18,7 +19,7 @@ export class HostProviderInterceptor implements HttpInterceptor {
     if (url.includes('ws://'))
       return url;
     else
-      return 'localhost:8280/' + url;
+      return 'http://127.0.0.1:8811/' + url;
   }
 
 }

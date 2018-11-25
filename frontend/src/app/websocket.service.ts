@@ -15,7 +15,6 @@ export class WebsocketService {
   }
 
   public get wsSubject(): WebSocketSubject<any> {
-    console.log('wsSubjectXXXXXXXXXXXXX');
     if (!this._wsSubject || this._wsSubject.closed) {
       this._wsSubject = webSocket({
           url: this.url,

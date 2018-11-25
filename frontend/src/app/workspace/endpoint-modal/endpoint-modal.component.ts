@@ -43,9 +43,9 @@ export class EndpointModalComponent implements OnInit {
       delay: val.ep_res_delay,
     };
     return {
-      uuid: "asdfas", //todo: generate by backend
+      endpointId: "asdfas", //todo: generate by backend
       name: val.ep_name,
-      desc: val.ep_desc,
+      description: val.ep_desc,
       response: res
     }
   }

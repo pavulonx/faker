@@ -10,8 +10,8 @@
       </form>
 
       <div>
-        <app-endpoint-tile *ngFor="let endpoint of endpoints" [endpoint]="endpoint"
-                           routerLink="{{endpoint.uuid}}"></app-endpoint-tile>
+        <app-endpoint-tile *ngFor="let endpoint of workspace?.endpoints" [endpoint]="endpoint"
+                           routerLink="{{endpoint.endpointId}}"></app-endpoint-tile>
       </div>
     </div>
 

@@ -8,18 +8,21 @@ import {Component, Input, OnInit} from '@angular/core';
 export class EndpointTileComponent implements OnInit {
 
   @Input()
-  endpoint: any;
+  endpoint: Endpoint;
 
   constructor() {
-
   }
 
   ngOnInit() {
-    console.log(this.endpoint)
+    console.log(this.endpoint);
   }
 
   unseenEvents() {
     return false;
   }
 
+  endpointCreationDate() {
+    // todo: format humn-friendly style
+    return this.endpoint.createdAt;
+  }
 }
