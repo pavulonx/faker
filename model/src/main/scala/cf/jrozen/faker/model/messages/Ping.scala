@@ -5,8 +5,7 @@ import java.time.Instant
 import io.circe._
 import io.circe.generic.semiauto._
 
-case class Ping(msg: String, timestamp: Long = Instant.now.toEpochMilli)
-
+case class Ping(msg: String, timestamp: Long = Instant.now.toEpochMilli) extends Event
 
 object Ping {
   implicit val encoder: Encoder[Ping] = deriveEncoder[Ping]

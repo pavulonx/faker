@@ -18,8 +18,7 @@ export class WebsocketService {
     if (!this.wsSubjects.get(workspaceName) || this.wsSubjects.get(workspaceName).closed) {
       this.wsSubjects = this.wsSubjects.set(workspaceName, this.connect(workspaceName));
     }
-    console.log(this.wsSubjects);
-
+    console.debug(this.wsSubjects);
     return this.wsSubjects.get(workspaceName);
   }
 
@@ -32,7 +31,6 @@ export class WebsocketService {
   }
 
   getUpdates$(workspaceName: string): Observable<any> {
-    console.log(this.wsSubjects);
     return this.wsSubject(workspaceName).asObservable();
   }
 

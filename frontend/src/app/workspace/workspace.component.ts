@@ -27,7 +27,7 @@ export class WorkspaceComponent implements OnInit {
         flatMap(workspaceName => this.api.getWorkspace(workspaceName)),
         tap(workspace => this.workspace = workspace),
         tap(workspace => this.wsUpdates = this.ws.getUpdates$(workspace.name)),
-        tap(_ => this.wsUpdates.subscribe(e => console.log(e)))  //fixme: for testing
+        tap(_ => this.wsUpdates.subscribe(e => this.handleEvent(e)))  //fixme: for testing
       ).subscribe();
   }
 
@@ -45,5 +45,9 @@ export class WorkspaceComponent implements OnInit {
 
   tileEnabled(endpointId: string) {
     return this.router.url.includes(endpointId);
+  }
+
+  private handleEvent(event) {
+    // this.workspace.endpoints.filter(e => e.name === event.)
   }
 }
