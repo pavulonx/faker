@@ -14,8 +14,7 @@ class NotifierService[F[_] : ConcurrentEffect : ContextShift : Timer](val topic:
     topic
       .subscribe(4)
       .filter(cr => workspaceId == cr.key())
-//      .evalMap(m => m.value())
-            .evalMap(m => Effect[F].handleError(m.value())(_ => Event.empty))
+      .evalMap(m => Effect[F].handleError(m.value())(_ => Event.empty))
       .map(value => Text(value.asJson.toString))
   }
 }
