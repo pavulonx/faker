@@ -10,9 +10,16 @@
                  class="form-control"
                  formControlName="workspace_select_name"/>
         </div>
-        <button type="submit" class="w-100 btn btn-outline-primary" [disabled]="!workspaceSelect.valid">
-          GO
-        </button>
+
+        <div>
+          <button type="submit" class="w-50 btn btn-outline-primary" [disabled]="!workspaceSelect.valid">
+            GO
+          </button>
+          <button class="w-50 btn btn-outline-primary" [disabled]="workspaceSelect.valid" (click)="createWorkspace()">
+            Create new
+          </button>
+        </div>
+
       </div>
 
     </div>

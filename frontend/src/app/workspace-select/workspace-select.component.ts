@@ -1,6 +1,8 @@
 import {Component, OnInit} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {AbstractControl, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Router} from '@angular/router';
+import {ApiService} from "../api.service";
+import {delay, map} from "rxjs/operators";
 
 @Component({
   selector: 'app-workspace-select',
@@ -11,7 +13,7 @@ export class WorkspaceSelectComponent implements OnInit {
 
   workspaceSelect: FormGroup;
 
-  constructor(private formBuilder: FormBuilder, private router: Router) {
+  constructor(private formBuilder: FormBuilder, private router: Router, private api: ApiService) {
     this.createForm();
   }
 
@@ -20,12 +22,26 @@ export class WorkspaceSelectComponent implements OnInit {
 
   private createForm() {
     this.workspaceSelect = this.formBuilder.group({
-      workspace_select_name: ['', Validators.required],
+      workspace_select_name: ['', Validators.required, this.validateExists.bind(this)]
     });
+  }
+
+  validateExists(control: AbstractControl) {
+    return this.api.getWorkspace(control.value).pipe(map(res => res ? null : {validateExists: true}));
   }
 
   private submitForm() {
     this.router.navigate(['workspace/' + this.workspaceSelect.value.workspace_select_name]);
+  }
+
+  private createWorkspace() {
+    const input = this.workspaceSelect.value.workspace_select_name;
+    this.api.addWorkspace({name: input})
+      .pipe(delay(1000))
+      .subscribe(
+      e => this.router.navigate(['workspace/' + input]),
+      err => this.router.navigate(['workspace/'])
+    );
   }
 
 }

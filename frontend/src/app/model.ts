@@ -4,6 +4,10 @@ interface Workspace {
   endpoints: Endpoint[]
 }
 
+interface WorkspaceRequest {
+  name: string
+}
+
 interface Endpoint {
   endpointId?: string,
   createdAt?: Date,

@@ -30,4 +30,7 @@ export class ApiService {
     return this.http.get<Workspace>('api/workspace/' + workspaceName);
   }
 
+  addWorkspace(workspaceRequest: WorkspaceRequest): Observable<Workspace> {
+    return this.http.post<Workspace>('api/workspace', workspaceRequest);
+  }
 }
