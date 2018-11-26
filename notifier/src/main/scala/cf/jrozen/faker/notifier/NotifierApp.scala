@@ -1,9 +1,13 @@
 package cf.jrozen.faker.notifier
 
+import java.time.Instant
+
 import cats.data.NonEmptyList
 import cats.effect._
 import cats.implicits._
 import cf.jrozen.faker.kafka.KafkaConfiguration
+import cf.jrozen.faker.kafka.KafkaConfiguration.emptyRecord
+import cf.jrozen.faker.model.messages.{Event, Ping}
 import fs2.Stream
 import fs2.concurrent.Topic
 import fs2.kafka.{consumerExecutionContextStream, consumerStream}
@@ -22,7 +26,7 @@ object NotifierApp extends IOApp {
     for {
       conf <- Stream.eval(NotifierConfig.load[IO])
 
-      topic <- Stream.eval(Topic[IO, ConsumerRecord[String, String]](new ConsumerRecord("", 0, 0, "START", null)))
+      topic <- Stream.eval(Topic[IO, ConsumerRecord[String, IO[Event]]](emptyRecord(IO.pure(Ping("INIT", Instant.EPOCH)))))
       app = Router {
         "/" -> NotifierEndpoints.endpoints[IO](NotifierService[IO](topic))
       }.orNotFound
@@ -41,11 +45,14 @@ object NotifierApp extends IOApp {
       .serve
   }
 
+  /**
+    * fs2.Stream.awakeEvery[F](4 seconds).map(s => emptyRecord(Sync[F].raiseError(new Exception())))
+    */
   def kafkaStream[F[_] : ConcurrentEffect : ContextShift : Timer](notifierConfig: NotifierConfig
-                                                                 ): Stream[F, ConsumerRecord[String, String]] = for {
+                                                                 ): Stream[F, ConsumerRecord[String, F[Event]]] = for {
     executionContext <- consumerExecutionContextStream[F]
     notifierGroupId = s"notifier_${Random.alphanumeric.take(5).mkString}"
-    consumerSettings = KafkaConfiguration.consumerSettings[String](notifierGroupId, notifierConfig.kafka)
+    consumerSettings = KafkaConfiguration.consumerSettings[F, Event](notifierGroupId, notifierConfig.kafka)
     consumer <- consumerStream[F].using(consumerSettings(executionContext))
     _ <- consumer.subscribe(NonEmptyList.one(notifierConfig.notificationsTopic))
     message <- consumer.stream

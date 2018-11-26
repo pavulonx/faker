@@ -59,7 +59,6 @@ lazy val kafka = (project in file("kafka"))
     libraryDependencies ++= Seq(
       "com.ovoenergy" %% "fs2-kafka" % fs2KafkaVersion,
       "com.ovoenergy" %% "kafka-serialization-core" % KafkaSerializationV,
-      "com.ovoenergy" %% "kafka-serialization-core" % KafkaSerializationV,
       "com.ovoenergy" %% "kafka-serialization-circe" % KafkaSerializationV,
     ) ++ circeDependencies
   )
