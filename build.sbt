@@ -109,6 +109,7 @@ lazy val notifier = (project in file("notifier"))
       "ch.qos.logback" % "logback-classic" % LogbackVersion
     ) ++ http4sDependencies
       ++ circeDependencies
+      ++ pureconfigDependencies
       ++ testDependencies
   ).dependsOn(model, kafka)
 

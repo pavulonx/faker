@@ -16,6 +16,7 @@ import {AboutComponent} from './about/about.component';
 import {EndpointDetailsComponent} from './workspace/endpoint-details/endpoint-details.component';
 import {ApiService} from './api.service';
 import {httpInterceptorProviders} from './http-interceptors';
+import { WorkspaceSelectComponent } from './workspace-select/workspace-select.component';
 
 
 @NgModule({
@@ -25,7 +26,8 @@ import {httpInterceptorProviders} from './http-interceptors';
     EndpointModalComponent,
     EndpointTileComponent,
     AboutComponent,
-    EndpointDetailsComponent
+    EndpointDetailsComponent,
+    WorkspaceSelectComponent
   ],
   imports: [
     BrowserModule,

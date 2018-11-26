@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
-import {NgbActiveModal} from "@ng-bootstrap/ng-bootstrap";
-import {FormBuilder, FormGroup, Validators} from "@angular/forms";
+import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {parseNumber} from '../../utils';
 
 @Component({
   selector: 'app-endpoint-modal',
@@ -40,14 +41,13 @@ export class EndpointModalComponent implements OnInit {
       code: val.ep_res_code,
       // headers: val.headers,
       body: val.ep_res_body,
-      delay: val.ep_res_delay,
+      delay: parseNumber(val.ep_res_delay),
     };
     return {
-      endpointId: "asdfas", //todo: generate by backend
       name: val.ep_name,
       description: val.ep_desc,
-      response: res
-    }
+      responseTemplate: res
+    };
   }
 
   private dismissForm(cause: string) {

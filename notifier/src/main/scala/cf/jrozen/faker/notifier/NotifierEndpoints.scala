@@ -11,12 +11,15 @@ import org.http4s.dsl.Http4sDsl
 import org.http4s.server.websocket.WebSocketBuilder
 import org.http4s.websocket.WebSocketFrame
 import org.http4s.websocket.WebSocketFrame.Text
+import org.log4s.getLogger
 
 import scala.concurrent.duration._
 
 class NotifierEndpoints[F[_] : Timer](implicit F: ConcurrentEffect[F]) extends Http4sDsl[F] {
 
-  private def pingStream(interval: FiniteDuration = 10 seconds): Stream[F, Text] =
+  private[this] val logger = getLogger
+
+  private def pingStream(interval: FiniteDuration): Stream[F, Text] =
     Stream.awakeEvery[F](interval).map(_ => Text(Ping("ping").asJson.toString))
 
   def serviceInfo(): HttpRoutes[F] = HttpRoutes.of[F] { //todo: move to commons
@@ -52,9 +55,10 @@ class NotifierEndpoints[F[_] : Timer](implicit F: ConcurrentEffect[F]) extends H
   }
 
   def serviceEndpoint(notifierService: NotifierService[F]): HttpRoutes[F] = HttpRoutes.of[F] {
-    case GET -> Root / "notifications" / clientId =>
-      val toClient: Stream[F, WebSocketFrame] = notifierService.subscribe(clientId) merge pingStream()
-      val fromClient: Sink[F, WebSocketFrame] = _ => Stream.empty
+    case GET -> Root / "notifications" / workspaceId =>
+      val toClient: Stream[F, WebSocketFrame] = notifierService.subscribe(workspaceId) merge pingStream(10 seconds)
+      val fromClient: Sink[F, WebSocketFrame] = _.evalMap(x => F.delay(logger.info(s"Received from notifications channel: $x")))
+
       WebSocketBuilder[F].build(toClient, fromClient)
 
   }

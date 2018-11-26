@@ -17,7 +17,6 @@ export class EndpointTileComponent implements OnInit {
   }
 
   ngOnInit() {
-    console.log(this.endpoint);
   }
 
   unseenEvents() {

@@ -1,15 +1,15 @@
 interface Workspace {
-  name: String,
+  name: string,
   createdAt: Date,
   endpoints: Endpoint[]
 }
 
 interface Endpoint {
-  endpointId?: String,
+  endpointId?: string,
   createdAt?: Date,
-  name?: String,
-  description?: String,
-  response: ResponseTemplate,
+  name?: string,
+  description?: string,
+  responseTemplate: ResponseTemplate,
 }
 
 interface ResponseTemplate {

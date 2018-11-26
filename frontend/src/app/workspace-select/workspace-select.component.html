@@ -1,0 +1,21 @@
+<div>
+
+  <form [formGroup]="workspaceSelect" (ngSubmit)="submitForm()">
+    <div class="row">
+
+      <div class="container">
+        <div class="form-group" title="Write workspace name">
+          <label for="workspace_select_name">Workspace name:</label>
+          <input id="workspace_select_name" type="text" autofocus
+                 class="form-control"
+                 formControlName="workspace_select_name"/>
+        </div>
+        <button type="submit" class="w-100 btn btn-outline-primary" [disabled]="!workspaceSelect.valid">
+          GO
+        </button>
+      </div>
+
+    </div>
+  </form>
+
+</div>

@@ -10,8 +10,16 @@ export class ApiService {
   constructor(private http: HttpClient) {
   }
 
-  getEndpoint(workspaceName: string, endpointUuid: string): Observable<Endpoint> {
-    return this.http.get<Endpoint>('api/endpoint/' + workspaceName + '/' + endpointUuid);
+  getEndpoint(workspaceName: string, endpointId: string): Observable<Endpoint> {
+    return this.http.get<Endpoint>('api/endpoint/' + workspaceName + '/' + endpointId);
+  }
+
+  addEndpoint(workspaceName: string, endpointRequest: Endpoint): Observable<Endpoint> {
+    return this.http.post<Endpoint>('api/endpoint/' + workspaceName, endpointRequest);
+  }
+
+  deleteEndpoint(workspaceName: string, endpointId: string): Observable<Endpoint> {
+    return this.http.delete<Endpoint>('api/endpoint/' + workspaceName + '/' + endpointId);
   }
 
   getEndpoints(workspaceName: string): Observable<Endpoint[]> {
