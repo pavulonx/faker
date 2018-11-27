@@ -1,36 +1,32 @@
 package cf.jrozen.faker.callmanager
 
 import cats.effect._
-import cf.jrozen.faker.model.messages.Event
-import fs2.Stream
-import fs2.concurrent.Topic
-import io.circe.syntax._
-import org.apache.kafka.clients.consumer.ConsumerRecord
-import org.http4s.websocket.WebSocketFrame.Text
+import cats.implicits._
+import cf.jrozen.faker.model.domain.{Call, Endpoint}
+import cf.jrozen.faker.model.messages.{Event, NewCall, RemoveEndpoint}
+import cf.jrozen.faker.mongo.repository.CallRepositoryMutable
 import org.log4s.getLogger
 
-class CallManagerService[F[_] : ConcurrentEffect : ContextShift : Timer](val topic: Topic[F, ConsumerRecord[String, F[Event]]]) {
+class CallManagerService[F[_] : ConcurrentEffect : ContextShift : Timer](callRepository: CallRepositoryMutable[F])(implicit F: Effect[F]) {
 
   private[this] val logger = getLogger
 
-  def subscribe(workspaceId: String): Stream[F, Text] = {
-    topic
-      .subscribe(4)
-      .filter(cr => workspaceId == cr.key())
-      .evalMap(_.value())
-      //      .evalMap(m => Effect[F].handleError(m.value())(t => {
-      ////        logger.error(t.getStackTrace.mkString("", EOL, EOL))
-      //        t.printStackTrace()
-      //        logger.error(t)("Error occurred!")
-      //        Event.empty
-      //      }))
-      .map(value => Text(value.asJson.toString))
+  def process: Event => F[Unit] = {
+    case NewCall(call: Call) => callRepository.save(call).map(_ =>
+      logger.info(s"Saved call: $call")
+    )
+    case RemoveEndpoint(endpoint: Endpoint) => callRepository.deleteByEndpointId(endpoint.endpointId).map(dr =>
+      logger.info(s"Deleted ${dr.getDeletedCount} call events")
+    )
+    case otherwise => F.delay(
+      logger.warn(s"Received unhanded message $otherwise")
+    )
   }
 }
 
 object CallManagerService {
 
-  def apply[F[_] : ConcurrentEffect : ContextShift : Timer](topic: Topic[F, ConsumerRecord[String, F[Event]]]): CallManagerService[F] =
-    new CallManagerService[F](topic)
+  def apply[F[_] : ConcurrentEffect : ContextShift : Timer](callRepository: CallRepositoryMutable[F]): CallManagerService[F] =
+    new CallManagerService[F](callRepository)
 
 }

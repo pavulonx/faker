@@ -10,9 +10,9 @@ import org.http4s.server.blaze.BlazeServerBuilder
 object HealthCheckServer {
 
   def apply[F[_] : ConcurrentEffect : Timer](serviceInfo: ServiceInfo, port: Int = 2137): Stream[F, ExitCode] = {
-    val healthCheckApp: HttpApp[F] = Router[F] {
+    val healthCheckApp: HttpApp[F] = Router[F](
       "/service" -> ServiceInfoEndpoints[F](serviceInfo)
-    }.orNotFound
+    ).orNotFound
 
     BlazeServerBuilder[F]
       .bindHttp(port)

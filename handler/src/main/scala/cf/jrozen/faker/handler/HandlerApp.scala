@@ -25,10 +25,10 @@ object HandlerApp extends IOApp {
       producer <- kafkaProducer[IO](conf)
       service = HandlerNotificationsService[IO](producer, conf)
 
-      app = Router {
-        "/handle" -> HandlerEndpoints[IO](service)
+      app = Router(
+        "/handle" -> HandlerEndpoints[IO](service),
         "/service" -> ServiceInfoEndpoints[IO](ServiceInfo("handler"))
-      }.orNotFound
+      ).orNotFound
 
       exitCode <- server[IO](app)
     } yield exitCode

@@ -18,6 +18,8 @@ trait CallRepositoryMutable[F[_]] extends CallRepository[F] {
   def save(call: Call): F[Unit]
 
   def delete(call: Call): F[DeleteResult]
+
+  def deleteByEndpointId(endpointId: String): F[DeleteResult]
 }
 
 private[repository] sealed class CallRepositoryImpl[F[_] : Async](col: MongoCollection[Document])
@@ -44,6 +46,10 @@ private[repository] sealed class CallRepositoryImpl[F[_] : Async](col: MongoColl
     col
       .effect[F]
       .deleteMany(callFilter(call.workspaceName, call.endpointId))
+
+  override def deleteByEndpointId(endpointId: String): F[DeleteResult] = {
+    delete(Filters.eq("endpointId", endpointId))
+  }
 }
 
 object CallRepository {

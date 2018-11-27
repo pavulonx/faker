@@ -28,10 +28,10 @@ object NotifierApp extends IOApp {
       conf <- Stream.eval(NotifierConfig.load[IO])
 
       topic <- Stream.eval(Topic[IO, ConsumerRecord[String, IO[Event]]](emptyRecord(IO.pure(Ping("INIT", Instant.EPOCH)))))
-      app = Router {
-        "/" -> NotifierEndpoints[IO](NotifierService[IO](topic))
+      app = Router(
+        "/" -> NotifierEndpoints[IO](NotifierService[IO](topic)),
         "/service" -> ServiceInfoEndpoints[IO](ServiceInfo("notifier"))
-      }.orNotFound
+      ).orNotFound
 
       server <- kafkaStream[IO](conf).to(topic.publish).concurrently(server[IO](app))
     } yield server

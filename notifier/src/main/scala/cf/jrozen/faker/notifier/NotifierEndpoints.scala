@@ -26,8 +26,8 @@ class NotifierEndpoints[F[_] : Timer](implicit F: ConcurrentEffect[F]) extends H
     case GET -> Root / "ping" =>
       val toClient: Stream[F, WebSocketFrame] = pingStream(1 second)
       val fromClient: Sink[F, WebSocketFrame] = _.evalMap {
-        case Text(t, _) => F.delay(println(t))
-        case f => F.delay(println(s"Unknown type: $f"))
+        case Text(t, _) => F.delay(logger.debug(s"PING DIAGNOSTICS: $t"))
+        case f => F.delay(logger.debug(s"PING DIAGNOSTICS: $f"))
       }
       WebSocketBuilder[F].build(toClient, fromClient)
 

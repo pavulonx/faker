@@ -28,6 +28,8 @@ object MongoConnection {
 
   implicit class MongoDatabaseSyntax(mongoDatabase: MongoDatabase) {
     def workspaces: MongoCollection[Document] = mongoDatabase.getCollection("workspaces")
+
+    def callEvents: MongoCollection[Document] = mongoDatabase.getCollection("calls")
   }
 
 }

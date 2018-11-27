@@ -1,15 +1,14 @@
 package cf.jrozen.faker.callmanager
 
-import java.time.Instant
-
 import cats.data.NonEmptyList
 import cats.effect._
 import cats.implicits._
 import cf.jrozen.faker.kafka.KafkaConfiguration
-import cf.jrozen.faker.kafka.KafkaConfiguration.emptyRecord
-import cf.jrozen.faker.model.messages.{Event, Ping}
+import cf.jrozen.faker.model.messages.Event
+import cf.jrozen.faker.mongo.MongoConfig
+import cf.jrozen.faker.mongo.MongoConnection.{connection, _}
+import cf.jrozen.faker.mongo.repository.CallRepository
 import fs2.Stream
-import fs2.concurrent.Topic
 import fs2.kafka.{consumerExecutionContextStream, consumerStream}
 import org.apache.kafka.clients.consumer.ConsumerRecord
 
@@ -19,17 +18,17 @@ object CallManagerApp extends IOApp {
     for {
       conf <- Stream.eval(CallManagerConfig.load[IO])
 
-      topic <- Stream.eval(Topic[IO, ConsumerRecord[String, IO[Event]]](emptyRecord(IO.pure(Ping("INIT", Instant.EPOCH)))))
-      service = CallManagerService[IO](topic)
+      mongoConnection <- connection[IO](MongoConfig.localDefault)
+      callEventsCol = mongoConnection.faker.callEvents
+      callRepo <- Stream.eval(Sync[IO].delay(CallRepository.mutable[IO](callEventsCol)))
+      service = CallManagerService[IO](callRepo)
 
-      server <- kafkaStream[IO](conf).to(topic.publish)
-    } yield server
+      app <- kafkaStream[IO](conf).evalMap(_.value()).evalMap[IO, Unit](service.process)
+    } yield app
 
   }.compile.drain.as(ExitCode.Success)
 
-  /**
-    * fs2.Stream.awakeEvery[F](4 seconds).map(s => emptyRecord(Sync[F].raiseError(new Exception())))
-    */
+
   def kafkaStream[F[_] : ConcurrentEffect : ContextShift : Timer](callManagerConfig: CallManagerConfig
                                                                  ): Stream[F, ConsumerRecord[String, F[Event]]] = for {
     executionContext <- consumerExecutionContextStream[F]

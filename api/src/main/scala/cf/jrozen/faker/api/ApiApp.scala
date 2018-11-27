@@ -41,10 +41,10 @@ object ApiApp extends IOApp {
       endpointService = EndpointService[F](endpointRepo)
       endpointEndpoints = EndpointEndpoints[F](endpointService)
 
-      app = CORS(Router {
-        "/api" -> (workspaceEndpoints <+> endpointEndpoints)
+      app = CORS(Router(
+        "/api" -> (workspaceEndpoints <+> endpointEndpoints),
         "/service" -> ServiceInfoEndpoints[F](ServiceInfo("api"))
-      })
+      ))
         .orNotFound
 
       exitCode <- server(app)
