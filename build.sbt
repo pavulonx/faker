@@ -32,7 +32,8 @@ lazy val circeDependencies = Seq(
   "io.circe" %% "circe-core" % CirceV,
   "io.circe" %% "circe-generic" % CirceV,
   "io.circe" %% "circe-parser" % CirceV,
-//  "io.circe" %% "circe-generic-extras" % CirceV
+//  "io.circe" %% "circe-derivation" % CirceV,
+  "io.circe" %% "circe-generic-extras" % CirceV
 )
 lazy val pureconfigDependencies = Seq(
   "com.github.pureconfig" %% "pureconfig" % PureConfigVersion
