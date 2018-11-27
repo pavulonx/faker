@@ -26,7 +26,7 @@ class RequestTranslator[F[_] : Sync](implicit F: Functor[F]) {
     bodyStream.compile.foldSemigroup
   }
 
-  def apply(req: Request[F]): F[FakerRequest] = F.map(translateBody(req))(body =>
+  def translate(req: Request[F]): F[FakerRequest] = F.map(translateBody(req))(body =>
     FakerRequest(
       method = req.method.renderString,
       uri = req.uri.renderString,

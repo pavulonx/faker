@@ -7,7 +7,7 @@ import io.circe.{Decoder, Encoder}
 
 
 case class Call(
-                 callId: String,
+//                 callId: String,
                  workspaceName: String,
                  endpointId: String,
                  timestamp: Instant,

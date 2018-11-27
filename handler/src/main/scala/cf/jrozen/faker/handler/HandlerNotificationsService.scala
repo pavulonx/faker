@@ -1,37 +1,24 @@
 package cf.jrozen.faker.handler
 
 import cats.effect._
-import cats.{FlatMap, Functor}
-import cf.jrozen.faker.kafka.KafkaConfiguration
+import cf.jrozen.faker.model.domain.Call
+import cf.jrozen.faker.model.messages.{Event, NewCall}
 import fs2.kafka._
 import org.apache.kafka.clients.producer.ProducerRecord
 
-class HandlerNotificationsService[F[_] : ConcurrentEffect : ContextShift : Sync : ContextShift : Functor : Timer : FlatMap](handlerConfig: HandlerConfig) {
+class HandlerNotificationsService[F[_] : Sync](producer: KafkaProducer[F, String, Event], conf: HandlerConfig) {
 
-  private def kafkaProducerSettings: ProducerSettings[String, String] = KafkaConfiguration.producerSettings[String](handlerConfig.kafka).withClientId("handler")
+  def emit(call: Call): F[ProducerResult[String, Event, Unit]] = producer.produce(callEvent(call))
 
-  private def producingRes: Resource[F, KafkaProducer[F, String, String]] = producerResource[F]
-    .using(kafkaProducerSettings)
-
-
-  def emit(value: String): F[ProducerResult[String, String, Unit]] = {
-    val stream =
-      for {
-        producer <- producerStream[F].using(kafkaProducerSettings)
-        result <- fs2.Stream.eval(producer.produce(msg(value)))
-      } yield result
-    stream.compile.lastOrError
-  }
-
-  private def msg(value: String) = {
-    val record = new ProducerRecord(handlerConfig.notificationsTopic, value.hashCode.toString, value)
+  private def callEvent(call: Call): ProducerMessage[String, Event, Unit] = {
+    val record: ProducerRecord[String, Event] = new ProducerRecord(conf.notificationsTopic, call.workspaceName, NewCall(call))
     ProducerMessage.single(record, ())
   }
 
 }
 
 object HandlerNotificationsService {
-  def apply[F[_] : ConcurrentEffect : ContextShift : Timer](handlerConfig: HandlerConfig): HandlerNotificationsService[F] = {
-    new HandlerNotificationsService[F](handlerConfig)
+  def apply[F[_] : Sync](producer: KafkaProducer[F, String, Event], conf: HandlerConfig): HandlerNotificationsService[F] = {
+    new HandlerNotificationsService[F](producer, conf)
   }
 }
