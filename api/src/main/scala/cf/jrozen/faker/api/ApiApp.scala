@@ -4,6 +4,7 @@ import cats.effect._
 import cats.implicits._
 import cf.jrozen.faker.api.endpoint.{EndpointEndpoints, EndpointService}
 import cf.jrozen.faker.api.workspace.{WorkspaceEndpoints, WorkspaceService, WorkspaceValidationInterpreter}
+import cf.jrozen.faker.commons.web.{ServiceInfo, ServiceInfoEndpoints}
 import cf.jrozen.faker.mongo.MongoConfig
 import cf.jrozen.faker.mongo.MongoConnection._
 import cf.jrozen.faker.mongo.repository.{EndpointRepository, WorkspaceRepository}
@@ -34,14 +35,15 @@ object ApiApp extends IOApp {
       workspaceRepo <- Stream.eval(Sync[F].delay(WorkspaceRepository[F](workspacesCol)))
       workspaceValidation = WorkspaceValidationInterpreter[F](workspaceRepo)
       workspaceService = WorkspaceService[F](workspaceRepo, workspaceValidation)
-      workspaceEndpoints = WorkspaceEndpoints.endpoints[F](workspaceService)
+      workspaceEndpoints = WorkspaceEndpoints[F](workspaceService)
 
       endpointRepo <- Stream.eval(Sync[F].delay(EndpointRepository[F](workspacesCol)))
       endpointService = EndpointService[F](endpointRepo)
-      endpointEndpoints = EndpointEndpoints.endpoints[F](endpointService)
+      endpointEndpoints = EndpointEndpoints[F](endpointService)
 
       app = CORS(Router {
         "/api" -> (workspaceEndpoints <+> endpointEndpoints)
+        "/service" -> ServiceInfoEndpoints[F](ServiceInfo("api"))
       })
         .orNotFound
 

@@ -23,6 +23,6 @@ class CallEndpoints[F[_] : Sync] extends Http4sDsl[F] {
 }
 
 object CallEndpoints {
-  def endpoints[F[_] : Effect](service: CallService[F]): HttpRoutes[F] =
+  def apply[F[_] : Effect](service: CallService[F]): HttpRoutes[F] =
     new CallEndpoints[F]().endpoints(service)
 }

@@ -29,7 +29,7 @@ class HandlerEndpoints[F[_] : Functor : Timer](handlerService: HandlerNotificati
 }
 
 object HandlerEndpoints {
-  def endpoints[F[_] : Sync : Timer](handlerService: HandlerNotificationsService[F]): HttpRoutes[F] = {
+  def apply[F[_] : Sync : Timer](handlerService: HandlerNotificationsService[F]): HttpRoutes[F] = {
     new HandlerEndpoints[F](handlerService).endpoints
   }
 }

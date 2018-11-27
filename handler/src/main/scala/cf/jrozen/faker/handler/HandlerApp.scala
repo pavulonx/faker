@@ -2,6 +2,7 @@ package cf.jrozen.faker.handler
 
 import cats.effect._
 import cats.implicits._
+import cf.jrozen.faker.commons.web.{ServiceInfo, ServiceInfoEndpoints}
 import cf.jrozen.faker.kafka.KafkaConfiguration
 import cf.jrozen.faker.model.messages.Event
 import fs2.Stream
@@ -25,8 +26,8 @@ object HandlerApp extends IOApp {
       service = HandlerNotificationsService[IO](producer, conf)
 
       app = Router {
-        "/handle" -> HandlerEndpoints.endpoints[IO](service)
-        //      "/service" -> //todo: create common service mapping for diagnostics
+        "/handle" -> HandlerEndpoints[IO](service)
+        "/service" -> ServiceInfoEndpoints[IO](ServiceInfo("handler"))
       }.orNotFound
 
       exitCode <- server[IO](app)

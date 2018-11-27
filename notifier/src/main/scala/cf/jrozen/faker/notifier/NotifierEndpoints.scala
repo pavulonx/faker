@@ -22,14 +22,6 @@ class NotifierEndpoints[F[_] : Timer](implicit F: ConcurrentEffect[F]) extends H
   private def pingStream(interval: FiniteDuration): Stream[F, Text] =
     Stream.awakeEvery[F](interval).map(_ => Text(Ping("ping").asJson.toString))
 
-  def serviceInfo(): HttpRoutes[F] = HttpRoutes.of[F] { //todo: move to commons
-    case GET -> Root / "info" =>
-      Ok("faker-notifier")
-
-    case GET -> Root / "version" =>
-      Ok("0.0.1")
-  }
-
   def wsDiagnostics(): HttpRoutes[F] = HttpRoutes.of[F] {
     case GET -> Root / "ping" =>
       val toClient: Stream[F, WebSocketFrame] = pingStream(1 second)
@@ -64,14 +56,14 @@ class NotifierEndpoints[F[_] : Timer](implicit F: ConcurrentEffect[F]) extends H
   }
 
   def endpoints(notifierService: NotifierService[F]): HttpRoutes[F] = {
-    serviceInfo <+> wsDiagnostics <+> serviceEndpoint(notifierService)
+    wsDiagnostics <+> serviceEndpoint(notifierService)
   }
 }
 
 object NotifierEndpoints {
 
-  def endpoints[F[_]](notifierService: NotifierService[F])
-                     (implicit F: ConcurrentEffect[F], timer: Timer[F]): HttpRoutes[F] = {
+  def apply[F[_]](notifierService: NotifierService[F])
+                 (implicit F: ConcurrentEffect[F], timer: Timer[F]): HttpRoutes[F] = {
     new NotifierEndpoints[F].endpoints(notifierService)
   }
 

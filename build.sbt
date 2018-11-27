@@ -36,12 +36,20 @@ lazy val circeDependencies = Seq(
 lazy val pureconfigDependencies = Seq(
   "com.github.pureconfig" %% "pureconfig" % PureConfigVersion
 )
-
 lazy val http4sDependencies = Seq(
   "org.http4s" %% "http4s-blaze-server" % Http4sVersion,
   "org.http4s" %% "http4s-circe" % Http4sVersion,
   "org.http4s" %% "http4s-dsl" % Http4sVersion,
 )
+
+lazy val commonsWeb = (project in file("commons/web"))
+  .settings(moduleName := "web-commons", name := "web-commons")
+  .settings(commonSettings)
+  .settings(
+    libraryDependencies ++= Seq(
+    ) ++ http4sDependencies
+      ++ circeDependencies
+  )
 
 lazy val model = (project in file("model"))
   .settings(moduleName := "model", name := "model")
@@ -63,30 +71,6 @@ lazy val kafka = (project in file("kafka"))
     ) ++ circeDependencies
   )
 
-lazy val api = (project in file("api"))
-  .settings(moduleName := "api", name := "api")
-  .settings(commonSettings)
-  .settings(
-    libraryDependencies ++= Seq(
-      "ch.qos.logback" % "logback-classic" % LogbackVersion
-    ) ++ http4sDependencies
-      ++ circeDependencies
-      ++ pureconfigDependencies
-      ++ testDependencies
-  ).dependsOn(model, kafka, mongo)
-
-lazy val handler = (project in file("handler"))
-  .settings(moduleName := "handler", name := "handler")
-  .settings(commonSettings)
-  .settings(
-    libraryDependencies ++= Seq(
-      "ch.qos.logback" % "logback-classic" % LogbackVersion
-    ) ++ http4sDependencies
-      ++ pureconfigDependencies
-      ++ circeDependencies
-      ++ testDependencies
-  ).dependsOn(model, kafka, mongo)
-
 lazy val mongo = (project in file("mongo"))
   .settings(moduleName := "mongo", name := "mongo")
   .settings(commonSettings)
@@ -99,6 +83,30 @@ lazy val mongo = (project in file("mongo"))
     ) ++ circeDependencies
   ).dependsOn(model)
 
+lazy val api = (project in file("api"))
+  .settings(moduleName := "api", name := "api")
+  .settings(commonSettings)
+  .settings(
+    libraryDependencies ++= Seq(
+      "ch.qos.logback" % "logback-classic" % LogbackVersion
+    ) ++ http4sDependencies
+      ++ circeDependencies
+      ++ pureconfigDependencies
+      ++ testDependencies
+  ).dependsOn(model, kafka, mongo, commonsWeb)
+
+lazy val handler = (project in file("handler"))
+  .settings(moduleName := "handler", name := "handler")
+  .settings(commonSettings)
+  .settings(
+    libraryDependencies ++= Seq(
+      "ch.qos.logback" % "logback-classic" % LogbackVersion
+    ) ++ http4sDependencies
+      ++ pureconfigDependencies
+      ++ circeDependencies
+      ++ testDependencies
+  ).dependsOn(model, kafka, mongo, commonsWeb)
+
 lazy val notifier = (project in file("notifier"))
   .settings(moduleName := "notifier", name := "notifier")
   .settings(commonSettings)
@@ -110,7 +118,7 @@ lazy val notifier = (project in file("notifier"))
       ++ circeDependencies
       ++ pureconfigDependencies
       ++ testDependencies
-  ).dependsOn(model, kafka)
+  ).dependsOn(model, kafka, commonsWeb)
 
 lazy val fakerApp = (project in file("."))
   .settings(name := "faker", moduleName := "root")
@@ -119,6 +127,7 @@ lazy val fakerApp = (project in file("."))
 
 
 lazy val aggregatedProjects: Seq[ProjectReference] = Seq(
+  commonsWeb,
   model,
   kafka,
   api,

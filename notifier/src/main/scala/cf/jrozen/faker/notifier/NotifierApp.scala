@@ -5,6 +5,7 @@ import java.time.Instant
 import cats.data.NonEmptyList
 import cats.effect._
 import cats.implicits._
+import cf.jrozen.faker.commons.web.{ServiceInfo, ServiceInfoEndpoints}
 import cf.jrozen.faker.kafka.KafkaConfiguration
 import cf.jrozen.faker.kafka.KafkaConfiguration.emptyRecord
 import cf.jrozen.faker.model.messages.{Event, Ping}
@@ -28,7 +29,8 @@ object NotifierApp extends IOApp {
 
       topic <- Stream.eval(Topic[IO, ConsumerRecord[String, IO[Event]]](emptyRecord(IO.pure(Ping("INIT", Instant.EPOCH)))))
       app = Router {
-        "/" -> NotifierEndpoints.endpoints[IO](NotifierService[IO](topic))
+        "/" -> NotifierEndpoints[IO](NotifierService[IO](topic))
+        "/service" -> ServiceInfoEndpoints[IO](ServiceInfo("notifier"))
       }.orNotFound
 
       server <- kafkaStream[IO](conf).to(topic.publish).concurrently(server[IO](app))

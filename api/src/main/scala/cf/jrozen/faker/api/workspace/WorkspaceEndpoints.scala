@@ -46,6 +46,6 @@ class WorkspaceEndpoints[F[_] : Effect : Functor] extends Http4sDsl[F] {
 }
 
 object WorkspaceEndpoints {
-  def endpoints[F[_] : Effect](workspacesService: WorkspaceService[F]): HttpRoutes[F] =
+  def apply[F[_] : Effect](workspacesService: WorkspaceService[F]): HttpRoutes[F] =
     new WorkspaceEndpoints[F]().endpoints(workspacesService)
 }
