@@ -47,7 +47,12 @@ export class WorkspaceComponent implements OnInit {
     return this.router.url.includes(endpointId);
   }
 
-  private handleEvent(event) {
-    // this.workspace.endpoints.filter(e => e.name === event.)
+  private handleEvent(event: Event) {
+    if (event.type == 'NewCall') {
+      const newCallEvent: NewCall = event as NewCall;
+      this.workspace.endpoints.filter(e => e.endpointId === newCallEvent.newCall.endpointId).forEach(
+        e => e.newEvents.push(newCallEvent)
+      );
+    }
   }
 }

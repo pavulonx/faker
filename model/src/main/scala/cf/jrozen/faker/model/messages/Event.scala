@@ -15,10 +15,14 @@ object Event {
 
   def empty: Event = Empty
 
+  private implicit class JsonObjectSyntax(delegate: JsonObject) {
+    def withType(`type`: String): JsonObject = delegate.add("eventType", `type`.asJson)
+  }
+
   implicit val eventEncoder: Encoder[Event] = ObjectEncoder.instance {
     case Empty => JsonObject.empty
-    case p@Ping(_, _) => p.asJsonObject.add("type", "Ping".asJson)
-    case nc@NewCall(_) => nc.asJsonObject.add("type", "NewCall".asJson)
+    case p@Ping(_, _) => p.asJsonObject.withType("Ping")
+    case nc@NewCall(_) => nc.asJsonObject.withType("NewCall")
   }
 
   implicit val eventDecoder: Decoder[Event] = for {
