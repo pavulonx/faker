@@ -6,7 +6,7 @@ enablePlugins(GitVersioning)
 val Http4sVersion = "0.20.0-M2" //todo: upgrade to stable 0.20.x series
 val Specs2Version = "4.2.0"
 val LogbackVersion = "1.2.3"
-val CirceVersion = "0.10.1"
+val CirceV = "0.10.1"
 val KafkaSerializationV = "0.3.16"
 val fs2KafkaVersion = "0.16.4" /// watch for new versions
 val fs2V = "1.0.0"
@@ -29,9 +29,10 @@ lazy val testDependencies = Seq(
   "org.specs2" %% "specs2-core" % Specs2Version % "test"
 )
 lazy val circeDependencies = Seq(
-  "io.circe" %% "circe-core" % CirceVersion,
-  "io.circe" %% "circe-generic" % CirceVersion,
-  "io.circe" %% "circe-parser" % CirceVersion
+  "io.circe" %% "circe-core" % CirceV,
+  "io.circe" %% "circe-generic" % CirceV,
+  "io.circe" %% "circe-parser" % CirceV,
+//  "io.circe" %% "circe-generic-extras" % CirceV
 )
 lazy val pureconfigDependencies = Seq(
   "com.github.pureconfig" %% "pureconfig" % PureConfigVersion
@@ -107,6 +108,18 @@ lazy val handler = (project in file("handler"))
       ++ testDependencies
   ).dependsOn(model, kafka, mongo, commonsWeb)
 
+lazy val callManager = (project in file("call-manager"))
+  .settings(moduleName := "call-manager", name := "call-manager")
+  .settings(commonSettings)
+  .settings(
+    libraryDependencies ++= Seq(
+      "co.fs2" %% "fs2-core" % fs2V,
+      "ch.qos.logback" % "logback-classic" % LogbackVersion
+    ) ++ pureconfigDependencies
+      ++ circeDependencies
+      ++ testDependencies
+  ).dependsOn(model, kafka, mongo, commonsWeb)
+
 lazy val notifier = (project in file("notifier"))
   .settings(moduleName := "notifier", name := "notifier")
   .settings(commonSettings)
@@ -130,9 +143,10 @@ lazy val aggregatedProjects: Seq[ProjectReference] = Seq(
   commonsWeb,
   model,
   kafka,
+  mongo,
   api,
   notifier,
-  mongo,
+  callManager,
   handler
 )
 
