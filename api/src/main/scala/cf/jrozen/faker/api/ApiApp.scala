@@ -2,6 +2,7 @@ package cf.jrozen.faker.api
 
 import cats.effect._
 import cats.implicits._
+import cf.jrozen.faker.api.call.{CallEndpoints, CallService}
 import cf.jrozen.faker.api.endpoint.{EndpointEndpoints, EndpointService}
 import cf.jrozen.faker.api.workspace.{WorkspaceEndpoints, WorkspaceService, WorkspaceValidationInterpreter}
 import cf.jrozen.faker.commons.web.{ServiceInfo, ServiceInfoEndpoints}
@@ -9,7 +10,7 @@ import cf.jrozen.faker.kafka.{KafkaConfiguration, MessageProducer}
 import cf.jrozen.faker.model.messages.Event
 import cf.jrozen.faker.mongo.MongoConfig
 import cf.jrozen.faker.mongo.MongoConnection._
-import cf.jrozen.faker.mongo.repository.{EndpointRepository, WorkspaceRepository}
+import cf.jrozen.faker.mongo.repository.{CallRepository, EndpointRepository, WorkspaceRepository}
 import fs2.Stream
 import fs2.kafka._
 import org.http4s.HttpApp
@@ -34,6 +35,7 @@ object ApiApp extends IOApp {
 
       mongoConnection <- connection[F](MongoConfig.localDefault)
       workspacesCol = mongoConnection.faker.workspaces
+      callEventsCol = mongoConnection.faker.callEvents
 
       eventProducer <- kafkaProducer[F](configs).map(kafkaProducer => MessageProducer[F, Event](configs.notificationsTopic)(kafkaProducer))
 
@@ -46,8 +48,12 @@ object ApiApp extends IOApp {
       endpointService = EndpointService[F](endpointRepo, eventProducer)
       endpointEndpoints = EndpointEndpoints[F](endpointService)
 
+      callRepo <- Stream.eval(Sync[F].delay(CallRepository[F](callEventsCol)))
+      callService = CallService[F](callRepo)
+      callEndpoints = CallEndpoints[F](callService)
+
       app = CORS(Router(
-        "/api" -> (workspaceEndpoints <+> endpointEndpoints),
+        "/api" -> (workspaceEndpoints <+> endpointEndpoints <+> callEndpoints),
         "/service" -> ServiceInfoEndpoints[F](ServiceInfo("api"))
       )).orNotFound
 

@@ -62,9 +62,7 @@ private[repository] sealed class CallRepositoryImpl[F[_] : Async](col: MongoColl
 
 object CallRepository {
 
-
   def apply[F[_] : Async : ContextShift](col: MongoCollection[Document]): CallRepository[F] = new CallRepositoryImpl[F](col)
 
   def mutable[F[_] : Async : ContextShift](col: MongoCollection[Document]): CallRepositoryMutable[F] = new CallRepositoryImpl[F](col)
-
 }

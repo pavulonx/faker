@@ -19,7 +19,7 @@ export class HostProviderInterceptor implements HttpInterceptor {
     if (url.includes('ws://'))
       return url;
     else
-      return 'http://127.0.0.1:8811/' + url;
+      return 'http://127.0.0.1:8811/api/' + url;
   }
 
 }

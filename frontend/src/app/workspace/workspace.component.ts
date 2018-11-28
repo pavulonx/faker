@@ -50,7 +50,7 @@ export class WorkspaceComponent implements OnInit {
   private handleEvent(event: Event) {
     if (event.type == 'NewCall') {
       const newCallEvent: NewCall = event as NewCall;
-      this.workspace.endpoints.filter(e => e.endpointId === newCallEvent.newCall.endpointId).forEach(
+      this.workspace.endpoints.filter(e => e.endpointId === newCallEvent.call.endpointId).forEach(
         e => e.newEvents.push(newCallEvent)
       );
     }

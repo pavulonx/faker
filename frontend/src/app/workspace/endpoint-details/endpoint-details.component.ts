@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {ApiService} from '../../api.service';
-import {flatMap, map} from 'rxjs/operators';
+import {flatMap, map, tap} from 'rxjs/operators';
 
 @Component({
   selector: 'app-endpoint-details',
@@ -11,8 +11,9 @@ import {flatMap, map} from 'rxjs/operators';
 export class EndpointDetailsComponent implements OnInit {
 
   endpoint: Endpoint;
+  calls: Call[];
 
-  constructor(private route: ActivatedRoute, private apiService: ApiService, private router: Router) {
+  constructor(private route: ActivatedRoute, private api: ApiService, private router: Router) {
   }
 
   ngOnInit() {
@@ -22,11 +23,14 @@ export class EndpointDetailsComponent implements OnInit {
         flatMap(workspaceName =>
           this.route.params.pipe(
             map(params => params['endpointId']),
-            flatMap(endpointId => this.apiService.getEndpoint(workspaceName, endpointId)),
+            // fetch endpoint
+            tap(endpointId => this.api.getEndpoint(workspaceName, endpointId).subscribe(endpoint => this.endpoint = endpoint)),
+            // fetch calls
+            tap(endpointId => this.api.getCalls(workspaceName, endpointId).subscribe(calls => this.calls = calls )),
           )
         ))
       .subscribe(
-        endpoint => this.endpoint = endpoint,
+        // endpoint => this.endpoint = endpoint,
         // err => this.route.parent.url.subscribe(url => this.router.navigate([url]))
       );
   }

@@ -11,9 +11,7 @@ class CallEndpoints[F[_] : Sync] extends Http4sDsl[F] {
 
   private def listCalls(service: CallService[F]): HttpRoutes[F] = HttpRoutes.of[F] {
     case GET -> Root / "call" / workspaceName / endpointId =>
-      service.findCalls(workspaceName, endpointId) >>= (
-        calls => Ok(calls.asJson)
-        )
+      service.findCalls(workspaceName, endpointId) >>= (calls => Ok(calls.asJson))
   }
 
   def endpoints(service: CallService[F]): HttpRoutes[F] = {
