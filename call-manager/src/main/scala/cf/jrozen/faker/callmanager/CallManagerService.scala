@@ -3,7 +3,7 @@ package cf.jrozen.faker.callmanager
 import cats.effect._
 import cats.implicits._
 import cf.jrozen.faker.model.domain.{Call, Endpoint}
-import cf.jrozen.faker.model.messages.{Event, NewCall, RemoveEndpoint}
+import cf.jrozen.faker.model.messages.{Event, NewCall, RemoveEndpoint, RemoveWorkspace}
 import cf.jrozen.faker.mongo.repository.CallRepositoryMutable
 import org.log4s.getLogger
 
@@ -15,7 +15,10 @@ class CallManagerService[F[_] : ConcurrentEffect : ContextShift : Timer](callRep
     case NewCall(call: Call) => callRepository.save(call).map(_ =>
       logger.info(s"Saved call: $call")
     )
-    case RemoveEndpoint(endpoint: Endpoint) => callRepository.deleteByEndpointId(endpoint.endpointId).map(dr =>
+    case RemoveEndpoint(endpointId: String) => callRepository.deleteByEndpointId(endpointId).map(dr =>
+      logger.info(s"Deleted ${dr.getDeletedCount} call events")
+    )
+    case RemoveWorkspace(workspaceName: String) => callRepository.deleteByWorkspaceName(workspaceName).map(dr =>
       logger.info(s"Deleted ${dr.getDeletedCount} call events")
     )
     case otherwise => F.delay(

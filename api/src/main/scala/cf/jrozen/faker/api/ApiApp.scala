@@ -5,10 +5,13 @@ import cats.implicits._
 import cf.jrozen.faker.api.endpoint.{EndpointEndpoints, EndpointService}
 import cf.jrozen.faker.api.workspace.{WorkspaceEndpoints, WorkspaceService, WorkspaceValidationInterpreter}
 import cf.jrozen.faker.commons.web.{ServiceInfo, ServiceInfoEndpoints}
+import cf.jrozen.faker.kafka.{KafkaConfiguration, MessageProducer}
+import cf.jrozen.faker.model.messages.Event
 import cf.jrozen.faker.mongo.MongoConfig
 import cf.jrozen.faker.mongo.MongoConnection._
 import cf.jrozen.faker.mongo.repository.{EndpointRepository, WorkspaceRepository}
 import fs2.Stream
+import fs2.kafka._
 import org.http4s.HttpApp
 import org.http4s.implicits._
 import org.http4s.server.Router
@@ -32,20 +35,21 @@ object ApiApp extends IOApp {
       mongoConnection <- connection[F](MongoConfig.localDefault)
       workspacesCol = mongoConnection.faker.workspaces
 
+      eventProducer <- kafkaProducer[F](configs).map(kafkaProducer => MessageProducer[F, Event](configs.notificationsTopic)(kafkaProducer))
+
       workspaceRepo <- Stream.eval(Sync[F].delay(WorkspaceRepository[F](workspacesCol)))
       workspaceValidation = WorkspaceValidationInterpreter[F](workspaceRepo)
-      workspaceService = WorkspaceService[F](workspaceRepo, workspaceValidation)
+      workspaceService = WorkspaceService[F](workspaceRepo, workspaceValidation, eventProducer)
       workspaceEndpoints = WorkspaceEndpoints[F](workspaceService)
 
       endpointRepo <- Stream.eval(Sync[F].delay(EndpointRepository[F](workspacesCol)))
-      endpointService = EndpointService[F](endpointRepo)
+      endpointService = EndpointService[F](endpointRepo, eventProducer)
       endpointEndpoints = EndpointEndpoints[F](endpointService)
 
       app = CORS(Router(
         "/api" -> (workspaceEndpoints <+> endpointEndpoints),
         "/service" -> ServiceInfoEndpoints[F](ServiceInfo("api"))
-      ))
-        .orNotFound
+      )).orNotFound
 
       exitCode <- server(app)
     } yield exitCode
@@ -56,6 +60,12 @@ object ApiApp extends IOApp {
       .bindHttp(8811)
       .withHttpApp(httpApp)
       .serve
+  }
+
+  def kafkaProducer[F[_] : ConcurrentEffect](apiConfig: ApiConfig): Stream[F, KafkaProducer[F, String, Event]] = {
+    val kafkaProducerSettings: ProducerSettings[String, Event] =
+      KafkaConfiguration.producerSettings[Event](apiConfig.kafka).withClientId("api")
+    producerStream[F].using(kafkaProducerSettings)
   }
 
 }

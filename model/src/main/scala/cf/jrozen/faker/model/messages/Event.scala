@@ -22,6 +22,7 @@ object Event {
     case p@Ping(_, _) => p.asJson
     case n@NewCall(_) => n.asJson
     case r@RemoveEndpoint(_) => r.asJson
+    case w@RemoveWorkspace(_) => w.asJson
   }
 
   implicit val eventDecoder: Decoder[Event] = for {
@@ -30,6 +31,7 @@ object Event {
       case "Ping" => Decoder[Ping]
       case "NewCall" => Decoder[NewCall]
       case "RemoveEndpoint" => Decoder[RemoveEndpoint]
+      case "RemoveWorkspace" => Decoder[RemoveWorkspace]
       case other => Decoder.failedWithMessage(s"invalid type: $other")
     }
   } yield value
@@ -52,11 +54,16 @@ object Ping {
   implicit val decoder: Decoder[Ping] = deriveDecoder
 }
 
-case class RemoveEndpoint(endpoint: Endpoint) extends Event
-
+case class RemoveEndpoint(endpointId: String) extends Event
 object RemoveEndpoint {
   implicit val encoder: Encoder[RemoveEndpoint] = TypedEncoder(deriveEncoder[RemoveEndpoint])
   implicit val decoder: Decoder[RemoveEndpoint] = deriveDecoder
+}
+
+case class RemoveWorkspace(workspaceName: String) extends Event
+object RemoveWorkspace {
+  implicit val encoder: Encoder[RemoveWorkspace] = TypedEncoder(deriveEncoder[RemoveWorkspace])
+  implicit val decoder: Decoder[RemoveWorkspace] = deriveDecoder
 }
 
 case class TypedEncoder[T: ClassTag](s: Encoder[T]) extends Encoder[T] {

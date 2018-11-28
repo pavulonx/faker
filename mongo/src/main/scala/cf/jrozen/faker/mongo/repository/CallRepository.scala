@@ -20,6 +20,8 @@ trait CallRepositoryMutable[F[_]] extends CallRepository[F] {
   def delete(call: Call): F[DeleteResult]
 
   def deleteByEndpointId(endpointId: String): F[DeleteResult]
+
+  def deleteByWorkspaceName(workspaceName: String): F[DeleteResult]
 }
 
 private[repository] sealed class CallRepositoryImpl[F[_] : Async](col: MongoCollection[Document])
@@ -28,9 +30,11 @@ private[repository] sealed class CallRepositoryImpl[F[_] : Async](col: MongoColl
     with CallRepository[F]
     with CallRepositoryMutable[F] {
 
-  def callFilter(workspaceName: String, endpointId: String): Bson = Filters.and(
-    Filters.eq("workspaceName", workspaceName),
-    Filters.eq("endpointId", endpointId))
+  val workspaceNameFilter: String => Bson = Filters.eq("workspaceName", _)
+  val endpointIdFilter: String => Bson = Filters.eq("endpointId", _)
+
+  val callFilter: (String, String) => Bson =
+    (workspaceName: String, endpointId: String) => Filters.and(workspaceNameFilter(workspaceName), endpointIdFilter(endpointId))
 
   override def find(workspaceName: String, endpointId: String): F[List[Call]] = {
     col
@@ -48,7 +52,11 @@ private[repository] sealed class CallRepositoryImpl[F[_] : Async](col: MongoColl
       .deleteMany(callFilter(call.workspaceName, call.endpointId))
 
   override def deleteByEndpointId(endpointId: String): F[DeleteResult] = {
-    delete(Filters.eq("endpointId", endpointId))
+    delete(endpointIdFilter(endpointId))
+  }
+
+  override def deleteByWorkspaceName(workspaceName: String): F[DeleteResult] = {
+    delete(workspaceNameFilter(workspaceName))
   }
 }
 
