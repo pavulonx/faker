@@ -2,6 +2,7 @@ scalaVersion in ThisBuild := "2.12.6"
 organization in ThisBuild := "cf.jrozen"
 
 enablePlugins(GitVersioning)
+enablePlugins(DockerPlugin)
 
 val Http4sVersion = "0.20.0-M2" //todo: upgrade to stable 0.20.x series
 val Specs2Version = "4.2.0"
@@ -32,7 +33,7 @@ lazy val circeDependencies = Seq(
   "io.circe" %% "circe-core" % CirceV,
   "io.circe" %% "circe-generic" % CirceV,
   "io.circe" %% "circe-parser" % CirceV,
-//  "io.circe" %% "circe-derivation" % CirceV,
+  //  "io.circe" %% "circe-derivation" % CirceV,
   "io.circe" %% "circe-generic-extras" % CirceV
 )
 lazy val pureconfigDependencies = Seq(
@@ -88,6 +89,7 @@ lazy val mongo = (project in file("mongo"))
 lazy val api = (project in file("api"))
   .settings(moduleName := "api", name := "api")
   .settings(commonSettings)
+  .settings(mainClass in assembly := Some("cf.jrozen.faker.api.ApiApp"))
   .settings(
     libraryDependencies ++= Seq(
       "ch.qos.logback" % "logback-classic" % LogbackVersion
@@ -99,6 +101,7 @@ lazy val api = (project in file("api"))
 
 lazy val handler = (project in file("handler"))
   .settings(moduleName := "handler", name := "handler")
+  .settings(mainClass in assembly := Some("cf.jrozen.faker.handler.HandlerApp"))
   .settings(commonSettings)
   .settings(
     libraryDependencies ++= Seq(
@@ -112,6 +115,7 @@ lazy val handler = (project in file("handler"))
 lazy val callManager = (project in file("call-manager"))
   .settings(moduleName := "call-manager", name := "call-manager")
   .settings(commonSettings)
+  .settings(mainClass in assembly := Some("cf.jrozen.faker.callmanager.CallManagerApp"))
   .settings(
     libraryDependencies ++= Seq(
       "co.fs2" %% "fs2-core" % fs2V,
@@ -123,6 +127,7 @@ lazy val callManager = (project in file("call-manager"))
 
 lazy val notifier = (project in file("notifier"))
   .settings(moduleName := "notifier", name := "notifier")
+  .settings(mainClass in assembly := Some("cf.jrozen.faker.notifier.NotifierApp"))
   .settings(commonSettings)
   .settings(
     libraryDependencies ++= Seq(
@@ -188,3 +193,18 @@ def priorTo2_13(scalaVersion: String): Boolean =
     case Some((2, minor)) if minor < 13 => true
     case _ => false
   }
+
+
+dockerfile in docker := {
+  // The assembly task generates a fat JAR file
+  val artifact: File = assembly.value
+  val artifactTargetPath = s"/app/${artifact.name}"
+
+  new Dockerfile {
+    from("openjdk:8-jre")
+    add(artifact, artifactTargetPath)
+    entryPoint("java", "-jar", artifactTargetPath)
+  }
+}
+
+buildOptions in docker := BuildOptions(cache = false)
