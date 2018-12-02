@@ -36,7 +36,7 @@ object HandlerApp extends IOApp {
 
   def server[F[_] : Sync : ConcurrentEffect : Timer](httpApp: HttpApp[F]): Stream[F, ExitCode] = {
     BlazeServerBuilder[F]
-      .bindHttp(8810)
+      .bindHttp(8888)
       .withHttpApp(httpApp)
       .serve
   }

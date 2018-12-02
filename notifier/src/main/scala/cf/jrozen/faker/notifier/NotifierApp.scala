@@ -40,7 +40,7 @@ object NotifierApp extends IOApp {
 
   def server[F[_] : ConcurrentEffect : Timer](httpApp: HttpApp[F]): Stream[F, ExitCode] = {
     BlazeServerBuilder[F]
-      .bindHttp(8280)
+      .bindHttp(8822)
       .withWebSockets(true)
       .withIdleTimeout(1 minute)
       .withHttpApp(httpApp)

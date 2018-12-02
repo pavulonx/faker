@@ -9,7 +9,7 @@ export class WebsocketService {
 
   private wsSubjects = new Map<string, WebSocketSubject<any>>();
 
-  private wsUrl = 'ws://localhost:8280/notifications/';
+  private wsUrl = 'ws://localhost:8822/notifications/';
 
   constructor() {
   }

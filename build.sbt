@@ -2,7 +2,6 @@ scalaVersion in ThisBuild := "2.12.6"
 organization in ThisBuild := "cf.jrozen"
 
 enablePlugins(GitVersioning)
-enablePlugins(DockerPlugin)
 
 val Http4sVersion = "0.20.0-M2" //todo: upgrade to stable 0.20.x series
 val Specs2Version = "4.2.0"
@@ -90,6 +89,7 @@ lazy val api = (project in file("api"))
   .settings(moduleName := "api", name := "api")
   .settings(commonSettings)
   .settings(mainClass in assembly := Some("cf.jrozen.faker.api.ApiApp"))
+  .settings(ApiDocker.settings)
   .settings(
     libraryDependencies ++= Seq(
       "ch.qos.logback" % "logback-classic" % LogbackVersion
@@ -97,12 +97,15 @@ lazy val api = (project in file("api"))
       ++ circeDependencies
       ++ pureconfigDependencies
       ++ testDependencies
-  ).dependsOn(model, kafka, mongo, commonsWeb)
+  )
+  .enablePlugins(JavaAppPackaging, DockerPlugin)
+  .dependsOn(model, kafka, mongo, commonsWeb)
 
 lazy val handler = (project in file("handler"))
   .settings(moduleName := "handler", name := "handler")
-  .settings(mainClass in assembly := Some("cf.jrozen.faker.handler.HandlerApp"))
   .settings(commonSettings)
+  .settings(mainClass in assembly := Some("cf.jrozen.faker.handler.HandlerApp"))
+  .settings(HandlerDocker.settings)
   .settings(
     libraryDependencies ++= Seq(
       "ch.qos.logback" % "logback-classic" % LogbackVersion
@@ -110,12 +113,15 @@ lazy val handler = (project in file("handler"))
       ++ pureconfigDependencies
       ++ circeDependencies
       ++ testDependencies
-  ).dependsOn(model, kafka, mongo, commonsWeb)
+  )
+  .enablePlugins(JavaAppPackaging, DockerPlugin)
+  .dependsOn(model, kafka, mongo, commonsWeb)
 
 lazy val callManager = (project in file("call-manager"))
   .settings(moduleName := "call-manager", name := "call-manager")
   .settings(commonSettings)
   .settings(mainClass in assembly := Some("cf.jrozen.faker.callmanager.CallManagerApp"))
+  .settings(CallManagerDocker.settings)
   .settings(
     libraryDependencies ++= Seq(
       "co.fs2" %% "fs2-core" % fs2V,
@@ -123,12 +129,15 @@ lazy val callManager = (project in file("call-manager"))
     ) ++ pureconfigDependencies
       ++ circeDependencies
       ++ testDependencies
-  ).dependsOn(model, kafka, mongo, commonsWeb)
+  )
+  .enablePlugins(JavaAppPackaging, DockerPlugin)
+  .dependsOn(model, kafka, mongo, commonsWeb)
 
 lazy val notifier = (project in file("notifier"))
   .settings(moduleName := "notifier", name := "notifier")
-  .settings(mainClass in assembly := Some("cf.jrozen.faker.notifier.NotifierApp"))
   .settings(commonSettings)
+  .settings(mainClass in assembly := Some("cf.jrozen.faker.notifier.NotifierApp"))
+  .settings(NotifierDocker.settings)
   .settings(
     libraryDependencies ++= Seq(
       "co.fs2" %% "fs2-core" % fs2V,
@@ -137,7 +146,9 @@ lazy val notifier = (project in file("notifier"))
       ++ circeDependencies
       ++ pureconfigDependencies
       ++ testDependencies
-  ).dependsOn(model, kafka, commonsWeb)
+  )
+  .enablePlugins(JavaAppPackaging, DockerPlugin)
+  .dependsOn(model, kafka, commonsWeb)
 
 lazy val fakerApp = (project in file("."))
   .settings(name := "faker", moduleName := "root")
@@ -193,18 +204,3 @@ def priorTo2_13(scalaVersion: String): Boolean =
     case Some((2, minor)) if minor < 13 => true
     case _ => false
   }
-
-
-dockerfile in docker := {
-  // The assembly task generates a fat JAR file
-  val artifact: File = assembly.value
-  val artifactTargetPath = s"/app/${artifact.name}"
-
-  new Dockerfile {
-    from("openjdk:8-jre")
-    add(artifact, artifactTargetPath)
-    entryPoint("java", "-jar", artifactTargetPath)
-  }
-}
-
-buildOptions in docker := BuildOptions(cache = false)
