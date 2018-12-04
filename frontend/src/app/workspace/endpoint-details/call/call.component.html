@@ -1,0 +1,15 @@
+<div class="card">
+  <div class="card-header" id="callDetailHeading" (click)="toggleCollapsed()">
+      <span class="btn" data-toggle="collapse" data-target="#collapseOne"
+              aria-expanded="true" aria-controls="collapseOne">
+        {{call?.request?.connectionInfo.remoteHost}} {{call?.timestamp }}
+      </span>
+  </div>
+
+  <div id="collapseOne" class="collapse" aria-labelledby="callDetailHeading" data-parent="#accordionExample"
+       [ngbCollapse]="isCollapsed">
+    <div class="card-body">
+      {{ call | json}}
+    </div>
+  </div>
+</div>

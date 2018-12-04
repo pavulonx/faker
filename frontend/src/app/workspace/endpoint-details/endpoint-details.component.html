@@ -2,8 +2,14 @@
   <h1>
     ENDPOINT DETAILS
   </h1>
-  <b>{{endpoint | json}}</b>
-  <br>
-  <br>
-  <b>{{calls | json}}</b>
+
+  <div class="form-group">
+    <label for="endpointDetails"></label>
+    <textarea id="endpointDetails" class="form-control rounded" [rows]="16">{{endpoint | json}}</textarea>
+  </div>
+
+  <div class="accordion" id="callsList">
+    <app-call *ngFor="let call of calls" [call]="call"></app-call>
+  </div>
+
 </div>
