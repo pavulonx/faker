@@ -1,7 +1,8 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {ApiService} from '../../api.service';
 import {flatMap, map, tap} from 'rxjs/operators';
+import {WebsocketService} from "../../websocket.service";
 
 @Component({
   selector: 'app-endpoint-details',
@@ -10,10 +11,15 @@ import {flatMap, map, tap} from 'rxjs/operators';
 })
 export class EndpointDetailsComponent implements OnInit {
 
+  @Input() workspaceName: string;
+
   endpoint: Endpoint;
   calls: Call[];
 
-  constructor(private route: ActivatedRoute, private api: ApiService, private router: Router) {
+  constructor(private route: ActivatedRoute,
+              private api: ApiService,
+              private wsService: WebsocketService,
+              private router: Router) {
   }
 
   ngOnInit() {
@@ -26,13 +32,23 @@ export class EndpointDetailsComponent implements OnInit {
             // fetch endpoint
             tap(endpointId => this.api.getEndpoint(workspaceName, endpointId).subscribe(endpoint => this.endpoint = endpoint)),
             // fetch calls
-            tap(endpointId => this.api.getCalls(workspaceName, endpointId).subscribe(calls => this.calls = calls )),
+            tap(endpointId => this.api.getCalls(workspaceName, endpointId).subscribe(calls => this.calls = calls)),
+
+            tap(_ => this.wsService.getUpdates$(workspaceName).subscribe(this.handleEvent))
           )
         ))
       .subscribe(
         // endpoint => this.endpoint = endpoint,
         // err => this.route.parent.url.subscribe(url => this.router.navigate([url]))
       );
+  }
+
+  private handleEvent(event: Event) { //fixme
+    if (event.type == 'NewCall' && event.type) {
+      const newCallEvent: NewCall = event as NewCall;
+      if (newCallEvent.call.endpointId === this.endpoint.endpointId)
+        this.calls.push(newCallEvent.call);
+    }
   }
 
 }

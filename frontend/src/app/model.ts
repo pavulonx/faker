@@ -14,7 +14,6 @@ interface Endpoint {
   name?: string,
   description?: string,
   responseTemplate: ResponseTemplate,
-  newEvents?: Event[]
 }
 
 interface Call {

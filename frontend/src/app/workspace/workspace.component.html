@@ -13,6 +13,7 @@
         <app-endpoint-tile *ngFor="let endpoint of workspace?.endpoints"
                            [endpoint]="endpoint"
                            [enabled]="tileEnabled(endpoint.endpointId)"
+                           [workspaceName]="workspace.name"
                            routerLink="{{endpoint.endpointId}}"
         ></app-endpoint-tile>
       </div>

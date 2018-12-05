@@ -14,8 +14,8 @@ import {Observable} from 'rxjs';
 })
 export class WorkspaceComponent implements OnInit {
 
-  private workspace: Workspace;
-  private wsUpdates: Observable<any>;
+  workspace: Workspace;
+  wsUpdates: Observable<any>;
 
   constructor(private api: ApiService, private ws: WebsocketService, private modalService: NgbModal, private route: ActivatedRoute, private router: Router) {
   }
@@ -27,7 +27,7 @@ export class WorkspaceComponent implements OnInit {
         flatMap(workspaceName => this.api.getWorkspace(workspaceName)),
         tap(workspace => this.workspace = workspace),
         tap(workspace => this.wsUpdates = this.ws.getUpdates$(workspace.name)),
-        tap(_ => this.wsUpdates.subscribe(e => this.handleEvent(e)))  //fixme: for testing
+        // tap(_ => this.wsUpdates.subscribe(e => this.handleEvent(e)))  //fixme: for testing
       ).subscribe();
   }
 
@@ -45,14 +45,5 @@ export class WorkspaceComponent implements OnInit {
 
   tileEnabled(endpointId: string) {
     return this.router.url.includes(endpointId);
-  }
-
-  private handleEvent(event: Event) {
-    if (event.type == 'NewCall') {
-      const newCallEvent: NewCall = event as NewCall;
-      this.workspace.endpoints.filter(e => e.endpointId === newCallEvent.call.endpointId).forEach(
-        e => e.newEvents.push(newCallEvent)
-      );
-    }
   }
 }
