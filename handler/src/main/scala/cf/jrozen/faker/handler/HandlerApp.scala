@@ -5,6 +5,10 @@ import cats.implicits._
 import cf.jrozen.faker.commons.web.{ServiceInfo, ServiceInfoEndpoints}
 import cf.jrozen.faker.kafka.KafkaConfiguration
 import cf.jrozen.faker.model.messages.Event
+import cf.jrozen.faker.mongo.MongoConfig
+import cf.jrozen.faker.mongo.MongoConnection.connection
+import cf.jrozen.faker.mongo.repository.EndpointRepository
+import cf.jrozen.faker.mongo.MongoConnection._
 import fs2.Stream
 import fs2.kafka.{KafkaProducer, ProducerSettings, producerStream}
 import org.http4s.HttpApp
@@ -18,19 +22,24 @@ object HandlerApp extends IOApp {
   private[this] val logger = getLogger
 
   override def run(args: List[String]): IO[ExitCode] = {
+    type F[X] = IO[X]
     for {
-      conf <- Stream.eval(HandlerConfig.load[IO])
-      _ <- Stream.eval(Sync[IO].delay(logger.info(s"Config loaded: $conf")))
+      conf <- Stream.eval(HandlerConfig.load[F])
+      _ <- Stream.eval(Sync[F].delay(logger.info(s"Config loaded: $conf")))
 
-      producer <- kafkaProducer[IO](conf)
-      service = HandlerNotificationsService[IO](producer, conf)
+      producer <- kafkaProducer[F](conf)
+      service = HandlerNotificationsService[F](producer, conf)
+
+      mongoConnection <- connection[F](MongoConfig.localDefault)
+      workspacesCol = mongoConnection.faker.workspaces
+      endpointRepo <- Stream.eval(Sync[F].delay(EndpointRepository[F](workspacesCol)))
 
       app = Router(
-        "/handle" -> HandlerEndpoints[IO](service),
-        "/service" -> ServiceInfoEndpoints[IO](ServiceInfo("handler"))
+        "/handle" -> HandlerEndpoints[F](service, endpointRepo),
+        "/service" -> ServiceInfoEndpoints[F](ServiceInfo("handler"))
       ).orNotFound
 
-      exitCode <- server[IO](app)
+      exitCode <- server[F](app)
     } yield exitCode
   }.compile.drain.as(ExitCode.Success)
 
