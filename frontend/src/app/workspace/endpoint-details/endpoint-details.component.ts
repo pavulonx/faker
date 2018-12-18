@@ -14,7 +14,7 @@ export class EndpointDetailsComponent implements OnInit {
   @Input() workspaceName: string;
 
   endpoint: Endpoint;
-  calls: Call[];
+  calls: Call[] = [];
 
   constructor(private route: ActivatedRoute,
               private api: ApiService,
@@ -34,7 +34,7 @@ export class EndpointDetailsComponent implements OnInit {
             // fetch calls
             tap(endpointId => this.api.getCalls(workspaceName, endpointId).subscribe(calls => this.calls = calls)),
 
-            tap(_ => this.wsService.getUpdates$(workspaceName).subscribe(this.handleEvent))
+            tap(_ => this.wsService.getUpdates$(workspaceName).subscribe(e => this.handleEvent(e)))
           )
         ))
       .subscribe(
@@ -43,8 +43,9 @@ export class EndpointDetailsComponent implements OnInit {
       );
   }
 
-  private handleEvent(event: Event) { //fixme
-    if (event.type == 'NewCall' && event.type) {
+  private handleEvent(event: ApplicationEvent) { //fixme
+    console.log("EndpointDetailsComponent.handleEvent" + this.endpoint.endpointId);
+    if (event.entityType && event.entityType == 'NewCall') {
       const newCallEvent: NewCall = event as NewCall;
       if (newCallEvent.call.endpointId === this.endpoint.endpointId)
         this.calls.push(newCallEvent.call);

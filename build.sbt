@@ -3,14 +3,14 @@ organization in ThisBuild := "cf.jrozen"
 
 enablePlugins(GitVersioning)
 
-val Http4sVersion = "0.20.0-M2" //todo: upgrade to stable 0.20.x series
+val Http4sVersion = "0.20.0-M4" //todo: upgrade to stable 0.20.x series
 val Specs2Version = "4.2.0"
 val LogbackVersion = "1.2.3"
 val CirceV = "0.10.1"
 val KafkaSerializationV = "0.3.16"
 val fs2KafkaVersion = "0.16.4" /// watch for new versions
 val fs2V = "1.0.0"
-val CatsEffV = "1.0.0"
+val CatsEffV = "1.1.0"
 val PureConfigVersion = "0.9.2"
 val MongoV = "3.8.2"
 //lazy val catsEffect = "org.typelevel" %% "cats-effect" % "1.0.0"

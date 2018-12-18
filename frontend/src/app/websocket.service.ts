@@ -24,8 +24,7 @@ export class WebsocketService {
 
   private connect(workspaceName: string) {
     return webSocket({
-        url: this.getUrl(workspaceName),
-        deserializer: this.stringDeserializer()
+        url: this.getUrl(workspaceName)
       }
     );
   }
@@ -41,10 +40,6 @@ export class WebsocketService {
 
   private getUrl(workspaceName: string): string {
     return this.wsUrl + workspaceName;
-  }
-
-  stringDeserializer() {
-    return x => stringify(x);
   }
 
 }

@@ -54,23 +54,23 @@ interface ResponseTemplate {
 // }
 
 
-interface Event {
-  eventType: string,
+interface ApplicationEvent {
+  entityType: string,
 }
 
-interface NewCall extends Event {
+interface NewCall extends ApplicationEvent {
   call: Call,
 }
 
-interface Ping extends Event {
+interface Ping extends ApplicationEvent {
   msg: string,
   timestamp: Date
 }
 
-interface RemoveEndpoint extends Event {
+interface RemoveEndpoint extends ApplicationEvent {
   endpointId: string,
 }
 
-interface RemoveWorkspace extends Event {
+interface RemoveWorkspace extends ApplicationEvent {
   workspaceName: string,
 }
