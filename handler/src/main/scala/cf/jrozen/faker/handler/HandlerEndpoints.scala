@@ -27,7 +27,7 @@ class HandlerEndpoints[F[_] : Functor : Timer](
         call = Call(workspaceId, endpointId, Instant.now, result)
         _ <- S.suspend(handlerService.emit(call))
         endpoint <- endpointRepository.findEndpoint(workspaceId, endpointId).flatMap(S.fromOption(_, new NoSuchElementException)) // fixme
-        response <- ResponseTranslator[F].apply(endpoint.responseTemplate)
+        response <- ResponseTranslator[F].apply(endpoint.responseTemplate).orElse(NotFound())
       } yield response
   }
 }
