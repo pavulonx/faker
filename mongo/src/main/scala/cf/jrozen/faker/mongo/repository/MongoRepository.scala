@@ -24,13 +24,10 @@ import scala.collection.JavaConverters._
 private[mongo] class MongoRepository[F[_] : Async, T](col: MongoCollection[Document])
                                                      (implicit cs: ContextShift[F], val decoder: Decoder[T], val encoder: Encoder[T]) {
 
-  implicit class DocumentStreamSyntax(stream: Stream[F, Document]) { // TODO: can we use FunctorFilter??
-    def decode: Stream[F, T] = stream.flatMap { doc: Document =>
-      io.circe.parser.decode[T](doc.toJson()) match {
-        case Left(_) => Stream.empty
-        case Right(x) => Stream.emit(x)
-      }
-    }
+  implicit class DocumentStreamSyntax(stream: Stream[F, Document]) {
+    def decode: Stream[F, T] = stream.map { doc: Document =>
+      io.circe.parser.decode[T](doc.toJson).toOption
+    }.unNone
   }
 
   def delete(filter: Bson): F[DeleteResult] = {
