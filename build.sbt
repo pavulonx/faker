@@ -3,9 +3,10 @@ organization in ThisBuild := "cf.jrozen"
 
 enablePlugins(GitVersioning)
 
-val Http4sVersion = "0.20.0-M4" //todo: upgrade to stable 0.20.x series
-val Specs2Version = "4.2.0"
-val LogbackVersion = "1.2.3"
+val http4sVersion = "0.20.0-M4" //todo: upgrade to stable 0.20.x series
+val scalaTestVersion = "3.0.5"
+val scalaCheckVersion = "1.14.0"
+val logbackVersion = "1.2.3"
 val CirceV = "0.10.1"
 val KafkaSerializationV = "0.3.16"
 val fs2KafkaVersion = "0.16.4" /// watch for new versions
@@ -26,7 +27,10 @@ lazy val commonSettings = Seq(
   scalacOptions ++= commonScalacOptions(scalaVersion.value)
 )
 lazy val testDependencies = Seq(
-  "org.specs2" %% "specs2-core" % Specs2Version % "test"
+  "org.scalatest" %% "scalatest" % scalaTestVersion % Test,
+
+  "org.scalacheck" %% "scalacheck" % scalaCheckVersion % Test,
+  "org.http4s" %% "http4s-blaze-client" % http4sVersion % Test
 )
 lazy val circeDependencies = Seq(
   "io.circe" %% "circe-core" % CirceV,
@@ -39,9 +43,9 @@ lazy val pureconfigDependencies = Seq(
   "com.github.pureconfig" %% "pureconfig" % PureConfigVersion
 )
 lazy val http4sDependencies = Seq(
-  "org.http4s" %% "http4s-blaze-server" % Http4sVersion,
-  "org.http4s" %% "http4s-circe" % Http4sVersion,
-  "org.http4s" %% "http4s-dsl" % Http4sVersion,
+  "org.http4s" %% "http4s-blaze-server" % http4sVersion,
+  "org.http4s" %% "http4s-circe" % http4sVersion,
+  "org.http4s" %% "http4s-dsl" % http4sVersion,
 )
 
 lazy val commonsWeb = (project in file("commons/web"))
@@ -81,7 +85,7 @@ lazy val mongo = (project in file("mongo"))
       "org.mongodb" % "mongodb-driver-async" % MongoV,
       "org.typelevel" %% "cats-effect" % CatsEffV,
       "co.fs2" %% "fs2-core" % fs2V,
-      "ch.qos.logback" % "logback-classic" % LogbackVersion
+      "ch.qos.logback" % "logback-classic" % logbackVersion
     ) ++ circeDependencies
   ).dependsOn(model)
 
@@ -92,7 +96,7 @@ lazy val api = (project in file("api"))
   .settings(ApiDocker.settings)
   .settings(
     libraryDependencies ++= Seq(
-      "ch.qos.logback" % "logback-classic" % LogbackVersion
+      "ch.qos.logback" % "logback-classic" % logbackVersion
     ) ++ http4sDependencies
       ++ circeDependencies
       ++ pureconfigDependencies
@@ -108,7 +112,7 @@ lazy val handler = (project in file("handler"))
   .settings(HandlerDocker.settings)
   .settings(
     libraryDependencies ++= Seq(
-      "ch.qos.logback" % "logback-classic" % LogbackVersion
+      "ch.qos.logback" % "logback-classic" % logbackVersion
     ) ++ http4sDependencies
       ++ pureconfigDependencies
       ++ circeDependencies
@@ -125,7 +129,7 @@ lazy val callManager = (project in file("call-manager"))
   .settings(
     libraryDependencies ++= Seq(
       "co.fs2" %% "fs2-core" % fs2V,
-      "ch.qos.logback" % "logback-classic" % LogbackVersion
+      "ch.qos.logback" % "logback-classic" % logbackVersion
     ) ++ pureconfigDependencies
       ++ circeDependencies
       ++ testDependencies
@@ -141,7 +145,7 @@ lazy val notifier = (project in file("notifier"))
   .settings(
     libraryDependencies ++= Seq(
       "co.fs2" %% "fs2-core" % fs2V,
-      "ch.qos.logback" % "logback-classic" % LogbackVersion
+      "ch.qos.logback" % "logback-classic" % logbackVersion
     ) ++ http4sDependencies
       ++ circeDependencies
       ++ pureconfigDependencies
