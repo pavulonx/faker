@@ -43,7 +43,7 @@ object KafkaConfiguration {
   }
 
   private def circeJsonDeserializer[F[_], T: Decoder](implicit F: ApplicativeError[F, Throwable]): KafkaDeserializer[F[T]] = deserializer { (_, data) =>
-    parse(new String(data, StandardCharsets.UTF_8)).flatMap(json => json.as[T]).fold(e => F.raiseError(e), F.pure)
+    parse(new String(data, StandardCharsets.UTF_8)).flatMap(_.as[T]).fold(e => F.raiseError(e), F.pure)
   }
 
   def emptyRecord[T](value: T): ConsumerRecord[String, T] =

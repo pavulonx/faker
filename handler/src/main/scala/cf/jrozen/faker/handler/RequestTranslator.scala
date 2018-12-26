@@ -3,7 +3,7 @@ package cf.jrozen.faker.handler
 import cats.Functor
 import cats.effect.Sync
 import cats.implicits._
-import cf.jrozen.faker.model.domain.{Request => FakerRequest, ConnectionInfo => FakerConnectionInfo}
+import cf.jrozen.faker.model.domain.{ConnectionInfo => FakerConnectionInfo, Request => FakerRequest}
 import org.http4s.{Charset, MediaType, Message, Request}
 
 

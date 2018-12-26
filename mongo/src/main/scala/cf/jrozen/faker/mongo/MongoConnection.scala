@@ -12,7 +12,9 @@ object MongoConnection {
     Stream.resource(fromUrl[F](mongoInfo.url))
 
   def fromUrl[F[_]](url: String)(implicit F: Sync[F]): Resource[F, MongoClient] =
-    Resource.make(F.delay(MongoClients.create(url))) { client =>
+    Resource.make {
+      F.delay(MongoClients.create(url))
+    } { client =>
       F.delay(client.close())
     }
 

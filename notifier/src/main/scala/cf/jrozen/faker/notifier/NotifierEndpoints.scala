@@ -50,9 +50,7 @@ class NotifierEndpoints[F[_] : Timer](implicit F: ConcurrentEffect[F]) extends H
     case GET -> Root / "notifications" / workspaceId =>
       val toClient: Stream[F, WebSocketFrame] = notifierService.subscribe(workspaceId) merge pingStream(10 seconds)
       val fromClient: Sink[F, WebSocketFrame] = _.evalMap(x => F.delay(logger.info(s"Received from notifications channel: $x")))
-
       WebSocketBuilder[F].build(toClient, fromClient)
-
   }
 
   def endpoints(notifierService: NotifierService[F]): HttpRoutes[F] = {
