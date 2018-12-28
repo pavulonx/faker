@@ -1,14 +1,17 @@
 <div class="card">
   <div class="card-header" id="callDetailHeading" (click)="toggleCollapsed()">
-      <span class="btn" data-toggle="collapse" data-target="#collapseOne"
-              aria-expanded="true" aria-controls="collapseOne">
-        {{call?.request?.connectionInfo.remoteHost}} {{call?.timestamp }}
-      </span>
+    <div data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+      <div class="row">
+        <div class="col-4">{{call?.request?.method}}</div>
+        <div class="col-4">{{call?.request?.connectionInfo.remoteHost}}</div>
+        <div class="col-4">{{call?.timestamp | date:'medium' }}</div>
+      </div>
+    </div>
   </div>
 
   <div id="collapseOne" class="collapse" aria-labelledby="callDetailHeading" data-parent="#accordionExample"
        [ngbCollapse]="isCollapsed">
-    <div class="card-body">
+    <div class="card-body text-monospace">
       {{ call | json}}
     </div>
   </div>

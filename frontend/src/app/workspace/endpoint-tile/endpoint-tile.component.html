@@ -2,7 +2,7 @@
      [ngClass]="enabled ?'list-group-item-primary':'' ">
   <div class="d-flex w-100 justify-content-between">
     <h5 class="mb-1">{{endpoint?.name}} <span *ngIf="unseenEvents" class="badge badge-secondary">New</span></h5>
-    <small>{{endpointCreationDate() | date}}</small>
+    <small>{{endpointCreationDate() | date:'medium' }}</small>
   </div>
   <p class="mb-1">{{endpoint?.description}}</p>
   <small>{{endpoint?.endpointId}}</small>
