@@ -39,4 +39,8 @@ export class EndpointTileComponent implements OnInit {
         this.unseenEvents = true;
     }
   }
+
+  hasUnseenEvents() {
+    return this.unseenEvents = this.unseenEvents && !this.enabled;
+  }
 }
