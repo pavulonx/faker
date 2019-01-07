@@ -34,7 +34,7 @@ object CallManagerApp extends IOApp {
     executionContext <- consumerExecutionContextStream[F]
     consumerSettings = KafkaConfiguration.consumerSettings[F, Event]("call_manager", callManagerConfig.kafka)
     consumer <- consumerStream[F].using(consumerSettings(executionContext))
-    _ <- consumer.subscribe(NonEmptyList.one(callManagerConfig.notificationsTopic))
+    _ <- Stream.eval(consumer.subscribe(NonEmptyList.one(callManagerConfig.notificationsTopic)))
     message <- consumer.stream
   } yield message.record
 

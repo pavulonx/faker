@@ -6,11 +6,12 @@
         <button type="button" class="col-3 btn btn-primary" (click)="openEndpointModal()">Add</button>
       </div>
       <form class="form-inline">
-        <input class="form-control w-100" type="text" placeholder="Search">
+        <input #searchInput class="form-control w-100" type="text" name="search" placeholder="Search" autocomplete="off"
+               (keyup)="filterEndpoints(searchInput)">
       </form>
 
       <div>
-        <app-endpoint-tile *ngFor="let endpoint of workspace?.endpoints"
+        <app-endpoint-tile *ngFor="let endpoint of getEndpoints()"
                            [endpoint]="endpoint"
                            [enabled]="tileEnabled(endpoint.endpointId)"
                            [workspaceName]="workspace.name"

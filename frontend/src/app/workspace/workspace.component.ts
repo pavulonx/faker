@@ -6,6 +6,7 @@ import {ApiService} from '../api.service';
 import {flatMap, map, tap} from 'rxjs/operators';
 import {ActivatedRoute, Router} from '@angular/router';
 import {Observable} from 'rxjs';
+import * as R from 'ramda';
 
 @Component({
   selector: 'app-workspace',
@@ -17,6 +18,8 @@ export class WorkspaceComponent implements OnInit {
   workspace: Workspace;
   wsUpdates: Observable<any>;
 
+  filteredEndpoints: Endpoint[];
+
   constructor(private api: ApiService, private ws: WebsocketService, private modalService: NgbModal, private route: ActivatedRoute, private router: Router) {
   }
 
@@ -26,6 +29,7 @@ export class WorkspaceComponent implements OnInit {
         map(params => params['workspaceName']),
         flatMap(workspaceName => this.api.getWorkspace(workspaceName)),
         tap(workspace => this.workspace = workspace),
+        tap(workspace => this.filteredEndpoints = workspace.endpoints),
         tap(workspace => this.wsUpdates = this.ws.getUpdates$(workspace.name)),
         // tap(_ => this.wsUpdates.subscribe(e => this.handleEvent(e)))  //fixme: for testing
       ).subscribe();
@@ -45,5 +49,16 @@ export class WorkspaceComponent implements OnInit {
 
   tileEnabled(endpointId: string) {
     return this.router.url.includes(endpointId);
+  }
+
+  getEndpoints() {
+    return this.filteredEndpoints;
+  }
+
+  filterEndpoints(input) {
+    this.filteredEndpoints = this.workspace.endpoints
+      .filter(e =>
+        R.valuesIn(e).filter(p => p.toString().toUpperCase().includes(input.value.toUpperCase())).length > 0
+      );
   }
 }

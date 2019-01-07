@@ -56,7 +56,7 @@ object NotifierApp extends IOApp {
     notifierGroupId = s"notifier_${Random.alphanumeric.take(5).mkString}"
     consumerSettings = KafkaConfiguration.consumerSettings[F, Event](notifierGroupId, notifierConfig.kafka)
     consumer <- consumerStream[F].using(consumerSettings(executionContext))
-    _ <- consumer.subscribe(NonEmptyList.one(notifierConfig.notificationsTopic))
+    _ <- Stream.eval(consumer.subscribe(NonEmptyList.one(notifierConfig.notificationsTopic)))
     message <- consumer.stream
   } yield message.record
 
