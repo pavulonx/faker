@@ -48,7 +48,7 @@ export class EndpointDetailsComponent implements OnInit {
     if (event.entityType && event.entityType == 'NewCall') {
       const newCallEvent: NewCall = event as NewCall;
       if (newCallEvent.call.endpointId === this.endpoint.endpointId)
-        this.calls.push(newCallEvent.call);
+        this.calls.unshift(newCallEvent.call);
     }
   }
 
