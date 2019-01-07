@@ -20,7 +20,7 @@ export class WorkspaceSelectComponent implements OnInit {
   ngOnInit() {
   }
 
-  private createForm() {
+  createForm() {
     this.workspaceSelect = this.formBuilder.group({
       workspace_select_name: ['', Validators.required, this.validateExists.bind(this)]
     });
@@ -30,11 +30,11 @@ export class WorkspaceSelectComponent implements OnInit {
     return this.api.getWorkspace(control.value).pipe(map(res => res ? null : {validateExists: true}));
   }
 
-  private submitForm() {
+  submitForm() {
     this.router.navigate(['workspace/' + this.workspaceSelect.value.workspace_select_name]);
   }
 
-  private createWorkspace() {
+  createWorkspace() {
     const input = this.workspaceSelect.value.workspace_select_name;
     this.api.addWorkspace({name: input})
       .pipe(delay(1000))

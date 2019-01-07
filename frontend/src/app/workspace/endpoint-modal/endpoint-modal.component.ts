@@ -19,7 +19,7 @@ export class EndpointModalComponent implements OnInit {
   ngOnInit() {
   }
 
-  private createForm() {
+  createForm() {
     this.endpointForm = this.formBuilder.group({
       ep_name: [''],
       ep_desc: [''],
@@ -30,7 +30,7 @@ export class EndpointModalComponent implements OnInit {
     });
   }
 
-  private submitForm() {
+  submitForm() {
     this.modal.close(this.toEndpoint(this.endpointForm.value));
 
   }
@@ -50,7 +50,7 @@ export class EndpointModalComponent implements OnInit {
     };
   }
 
-  private dismissForm(cause: string) {
+  dismissForm(cause: string) {
     this.modal.close({cause: cause});
   }
 

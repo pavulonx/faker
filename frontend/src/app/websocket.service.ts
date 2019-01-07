@@ -2,6 +2,7 @@ import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs/Observable';
 import {webSocket, WebSocketSubject} from 'rxjs/webSocket';
 import {stringify} from 'querystring';
+import {environment} from "../environments/environment";
 
 
 @Injectable()
@@ -9,7 +10,7 @@ export class WebsocketService {
 
   private wsSubjects = new Map<string, WebSocketSubject<any>>();
 
-  private wsUrl = 'ws://localhost:8822/notifications/';
+  private wsUrl = 'ws://' + environment.notifierHost + ':8822/notifications/';
 
   constructor() {
   }

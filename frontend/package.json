@@ -5,6 +5,7 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
+    "docker": "ng build --prod && docker build -t faker-front .",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e"
