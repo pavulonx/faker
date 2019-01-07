@@ -12,6 +12,21 @@ export class EndpointModalComponent implements OnInit {
 
   endpointForm: FormGroup;
 
+  contentTypes: string[] = [
+    "text/plain",
+    "text/css",
+    "text/csv",
+    "text/html",
+    "text/xml",
+    "application/javascript",
+    "application/octet-stream",
+    "application/xhtml+xml",
+    "application/json",
+    "application/ld+json",
+    "application/xml",
+    "application/zip"
+  ];
+
   constructor(public activeModal: NgbActiveModal, private formBuilder: FormBuilder) {
     this.createForm();
   }
@@ -23,14 +38,15 @@ export class EndpointModalComponent implements OnInit {
     this.endpointForm = this.formBuilder.group({
       ep_name: [''],
       ep_desc: [''],
-      ep_res_code: [200, Validators.required],
+      ep_res_code: [200, Validators.compose([Validators.required, Validators.max(550), Validators.min(200)])],
       ep_res_content: [''],
       ep_res_body: [''],
-      ep_res_delay: ['']
+      ep_res_delay: ['0', Validators.max(10_000)]
     });
   }
 
   submitForm() {
+    console.log(this.endpointForm.value);
     this.modal.close(this.toEndpoint(this.endpointForm.value));
 
   }

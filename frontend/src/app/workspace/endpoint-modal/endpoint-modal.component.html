@@ -22,15 +22,15 @@
       </div>
       <div class="form-group">
         <label for="ep_res_code">Response code:</label>
-        <input id="ep_res_code" type="text" value="200" required
+        <input id="ep_res_code" type="number" value="200" min="200" max="550" required
                class="form-control"
                formControlName="ep_res_code"/>
       </div>
       <div class="form-group">
         <label for="ep_res_content">Content type:</label>
-        <input id="ep_res_content" type="text" value="text/html"
-               class="form-control"
-               formControlName="ep_res_content"/>
+        <select class="form-control" id="ep_res_content" formControlName="ep_res_content">
+          <option *ngFor="let contentType of contentTypes" [value]="contentType">{{contentType}}</option>
+        </select>
       </div>
       <div class="form-group">
         <label for="ep_res_body">Response body:</label>

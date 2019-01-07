@@ -22,4 +22,7 @@ export class CallComponent implements OnInit {
     this.isCollapsed = !this.isCollapsed
   }
 
+  stringify(call: Call) {
+    return JSON.parse(JSON.stringify(call))
+  }
 }

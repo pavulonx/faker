@@ -18,6 +18,7 @@ import {ApiService} from './api.service';
 import {httpInterceptorProviders} from './http-interceptors';
 import {WorkspaceSelectComponent} from './workspace-select/workspace-select.component';
 import { CallComponent } from './workspace/endpoint-details/call/call.component';
+import {PrettyPrintPipe} from "./pretty-print.pipe";
 
 
 @NgModule({
@@ -29,7 +30,8 @@ import { CallComponent } from './workspace/endpoint-details/call/call.component'
     AboutComponent,
     EndpointDetailsComponent,
     WorkspaceSelectComponent,
-    CallComponent
+    CallComponent,
+    PrettyPrintPipe
   ],
   imports: [
     BrowserModule,

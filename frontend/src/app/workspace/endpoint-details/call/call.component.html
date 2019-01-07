@@ -11,8 +11,8 @@
 
   <div id="collapseOne" class="collapse" aria-labelledby="callDetailHeading" data-parent="#accordionExample"
        [ngbCollapse]="isCollapsed">
-    <div class="card-body text-monospace">
-      {{ call | json}}
+    <div class="card-body text-monospace h5">
+      <pre [innerHTML]="call | prettyprint"></pre>
     </div>
   </div>
 </div>
