@@ -9,7 +9,7 @@ import org.http4s.circe._
 import org.http4s.dsl.Http4sDsl
 import org.http4s.{EntityDecoder, HttpRoutes}
 
-class EndpointEndpoints[F[_] : Sync] extends Http4sDsl[F] {
+class EndpointEndpoints[F[_]]()(implicit val F: Sync[F]) extends Http4sDsl[F] {
 
   implicit val endpointRequestDecoder: EntityDecoder[F, EndpointRequest] = jsonOf[F, EndpointRequest]
 
@@ -26,11 +26,12 @@ class EndpointEndpoints[F[_] : Sync] extends Http4sDsl[F] {
   }
 
   private def addEndpoint(service: EndpointService[F]): HttpRoutes[F] = HttpRoutes.of[F] {
-    case req@POST -> Root / "endpoint" / workspaceName => for {
-      endpointRequest <- req.as[EndpointRequest]
+    case req@POST -> Root / "endpoint" / workspaceName => (for {
+      endpointRequest <- F.flatMap[EndpointRequest, EndpointRequest](req.as[EndpointRequest])(er => if (er.responseTemplate.code >= 200 && er.responseTemplate.code <= 500) F.pure(er) else F.raiseError(new NoSuchElementException()) ) // fixme
       endpoint <- service.addEndpoint(workspaceName, endpointRequest)
       response <- Created(endpoint.asJson)
     } yield response
+      ).orElse(BadRequest())
   }
 
   private def deleteEndpoint(service: EndpointService[F]): HttpRoutes[F] = HttpRoutes.of[F] {

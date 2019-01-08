@@ -6,7 +6,7 @@
   </div>
 
   <div class="accordion" id="callsList">
-    <app-call *ngFor="let call of calls" [call]="call"></app-call>
+    <app-call *ngFor="let call of getCalls()" [call]="call"></app-call>
   </div>
 
 </div>
